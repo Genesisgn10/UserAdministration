@@ -1,12 +1,17 @@
 package com.example.useradministration
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.useradministration.databinding.FragmentUserListBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 
@@ -36,9 +41,9 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val user = User(
-            uid = 104,
-            name = "Genesis",
-            username = "Aquino",
+            id = 3,
+            name = "carlos",
+            username = "joaodsfds",
             password = "123",
             email = "email@exampsle.com",
             dateOfBirth = "01/01/1993",
@@ -50,5 +55,19 @@ class UserListFragment : Fragment() {
         )
 
         userRepository.addUser(user)
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val db = AppDatabase.getDatabase(requireContext())
+            val userDao = db.userDao()
+            val userList = userDao.getAllUsers()
+
+            withContext(Dispatchers.Main) {
+                Log.d("Debug", "userList size: ${userList.size}")
+                userList.forEach { user ->
+                    Log.d("Debug", "User: ${user.name}")
+                }
+            }
+        }
+
     }
 }

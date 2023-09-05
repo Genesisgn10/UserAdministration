@@ -22,6 +22,8 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_SEX = "sex"
         const val COLUMN_TYPE = "type"
         const val COLUMN_CPF_CNPJ = "cpf_cnpj"
+        const val COLUMN_PHOTO_URL = "photoUrl"  // Removendo a NOT NULL aqui
+        const val COLUMN_ADDRESS = "address"
 
         // Criação da tabela de usuários
         private const val CREATE_USERS_TABLE = """
@@ -34,21 +36,19 @@ class DatabaseHelper(context: Context) :
                 $COLUMN_BIRTHDATE TEXT,
                 $COLUMN_SEX TEXT,
                 $COLUMN_TYPE TEXT,
-                $COLUMN_CPF_CNPJ TEXT
-                -- outras colunas aqui
+                $COLUMN_CPF_CNPJ TEXT,
+                $COLUMN_PHOTO_URL TEXT,
+                $COLUMN_ADDRESS TEXT
             )
         """
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(CREATE_USERS_TABLE)
-        println()
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Atualizações do esquema, se necessário
         // Você pode implementar isso de acordo com sua necessidade
     }
-
-
 }

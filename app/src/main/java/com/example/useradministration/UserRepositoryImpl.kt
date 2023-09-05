@@ -42,6 +42,7 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
             put(DatabaseHelper.COLUMN_BIRTHDATE, user.dateOfBirth)
             put(DatabaseHelper.COLUMN_SEX, user.sex)
             put(DatabaseHelper.COLUMN_TYPE, user.userType)
+            put(DatabaseHelper.COLUMN_PHOTO_URL, user.photoUrl)
             put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpfOrCnpj)
         }
 
@@ -49,7 +50,7 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
             DatabaseHelper.TABLE_USERS,
             values,
             "${DatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(user.uid.toString())
+            arrayOf(user.id.toString())
         )
         db.close()
         return rowsAffected

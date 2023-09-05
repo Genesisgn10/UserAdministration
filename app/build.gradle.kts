@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -54,7 +55,7 @@ dependencies {
 
     val roomVersion = "2.5.2"
     implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
     val koinVersion = "3.4.3"
     implementation("io.insert-koin:koin-android:$koinVersion")

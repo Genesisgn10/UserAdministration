@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id") val id: Int?,
     @ColumnInfo(name = "name") @NonNull val name: String,
     @ColumnInfo(name = "username") @NonNull val username: String,
     @ColumnInfo(name = "password") @NonNull val password: String,

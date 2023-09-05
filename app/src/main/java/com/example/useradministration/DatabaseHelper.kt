@@ -3,12 +3,16 @@ package com.example.useradministration
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
-class DatabaseHelper(context: Context) :
+class DatabaseHelper(val context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+
     companion object {
-        private const val DATABASE_NAME = "MyApp5.db"
+        private const val DATABASE_NAME = "DatabaseTest.db"
         private const val DATABASE_VERSION = 1
 
         // Tabela de usuários
@@ -44,7 +48,29 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+      //  executeSqlScriptFromAssets(db, "stored_procedures.sql")
         db.execSQL(CREATE_USERS_TABLE)
+    }
+
+
+    // Método para executar um script SQL a partir de um arquivo na pasta assets
+    private fun executeSqlScriptFromAssets(db: SQLiteDatabase, fileName: String) {
+        try {
+            val inputStream = context.assets.open(fileName)
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            val statements = StringBuilder()
+            var line: String?
+            while (bufferedReader.readLine().also { line = it } != null) {
+                statements.append(line)
+            }
+            val script = statements.toString()
+            val statementsArray = script.split(";".toRegex()).toTypedArray()
+            for (sqlStatement in statementsArray) {
+                db.execSQL(sqlStatement)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

@@ -8,7 +8,17 @@
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.example.useradministration.UserListFragment"
-        android:label="teste"
-        tools:layout="@layout/fragment_user_list" />
+        android:label="lister"
+        tools:layout="@layout/fragment_user_list" >
+        <action
+            android:id="@+id/action_userListFragment_to_userRegisterFragment"
+            app:destination="@id/userRegisterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userRegisterFragment"
+        android:name="com.example.useradministration.UserRegisterFragment"
+        android:label="register"
+        tools:layout="@layout/fragment_user_registration" />
 
 </navigation>

@@ -2,7 +2,8 @@ package com.example.useradministration
 
 import android.util.Log
 
-class UserRepositoryImpl(private val dbHelper: DatabaseHelper, private val userDao: UserDao) : UserRepository2 {
+class UserRepositoryImpl(private val dbHelper: DatabaseHelper, private val userDao: UserDao) :
+    UserRepository2 {
     override fun addUser(user: User) {
         val db = dbHelper.writableDatabase
 
@@ -79,11 +80,7 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper, private val userD
     }
 
     override suspend fun getUsers(): List<User> {
-   /*     val db = AppDatabase.getDatabase(requireContext())
-        val userDao = db.userDao()
-        val userList = userDao.getAllUsers()*/
-        val userList = userDao.getAllUsers()
-        return userList
+        return userDao.getAllUsers()
     }
 }
 
@@ -91,5 +88,5 @@ interface UserRepository2 {
     fun addUser(user: User)
     fun updateUser(user: User): Int
     fun deleteUser(userId: Long)
-   suspend fun getUsers(): List<User>
+    suspend fun getUsers(): List<User>
 }

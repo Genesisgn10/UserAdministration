@@ -43,7 +43,7 @@ class UserListFragment : Fragment() {
         val user = User(
             id = 3,
             name = "bora",
-            username = "aquin2o",
+            username = "mikael",
             password = "123",
             email = "email@exampsle.com",
             birthdate = "01/01/1993",

@@ -48,7 +48,7 @@ class DatabaseHelper(val context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-      //  executeSqlScriptFromAssets(db, "stored_procedures.sql")
+        executeSqlScriptFromAssets(db, "stored_procedures.sql")
         db.execSQL(CREATE_USERS_TABLE)
     }
 

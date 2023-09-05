@@ -41,9 +41,9 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val user = User(
-            id = 3,
+            id = 1,
             name = "bora",
-            username = "mikael",
+            username = "Gn10",
             password = "123",
             email = "email@exampsle.com",
             birthdate = "01/01/1993",
@@ -54,20 +54,21 @@ class UserListFragment : Fragment() {
             cpf_cnpj = "123456789023"
         )
 
-        userRepository.addUser(user)
+       // userRepository.updateUser(user)
+        userRepository.deleteUser(2)
 
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val db = AppDatabase.getDatabase(requireContext())
-            val userDao = db.userDao()
-            val userList = userDao.getAllUsers()
+        /* viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+             val db = AppDatabase.getDatabase(requireContext())
+             val userDao = db.userDao()
+             val userList = userDao.getAllUsers()
 
-            withContext(Dispatchers.Main) {
-                Log.d("Debug", "userList size: ${userList.size}")
-                userList.forEach { user ->
-                    Log.d("Debug", "User: ${user.name}")
-                }
-            }
-        }
+             withContext(Dispatchers.Main) {
+                 Log.d("Debug", "userList size: ${userList.size}")
+                 userList.forEach { user ->
+                     Log.d("Debug", "User: ${user.name}")
+                 }
+             }
+         }*/
 
     }
 }

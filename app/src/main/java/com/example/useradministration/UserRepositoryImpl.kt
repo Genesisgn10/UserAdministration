@@ -21,7 +21,10 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
                 user.address
             )
 
-            db.execSQL("INSERT INTO users (name, username, password, email, birthdate, sex, type, cpf_cnpj, photoUrl, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", args)
+            db.execSQL(
+                "INSERT INTO users (name, username, password, email, birthdate, sex, type, cpf_cnpj, photoUrl, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                args
+            )
 
             Log.d("Database", "Usuário inserido com sucesso.")
         } catch (e: Exception) {
@@ -33,36 +36,47 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
 
     override fun updateUser(user: User): Int {
         val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(DatabaseHelper.COLUMN_NAME, user.name)
-            put(DatabaseHelper.COLUMN_USERNAME, user.username)
-            put(DatabaseHelper.COLUMN_PASSWORD, user.password)
-            put(DatabaseHelper.COLUMN_EMAIL, user.email)
-            put(DatabaseHelper.COLUMN_BIRTHDATE, user.birthdate)
-            put(DatabaseHelper.COLUMN_SEX, user.sex)
-            put(DatabaseHelper.COLUMN_TYPE, user.type)
-            put(DatabaseHelper.COLUMN_PHOTO_URL, user.photoUrl)
-            put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpf_cnpj)
-        }
 
-        val rowsAffected = db.update(
-            DatabaseHelper.TABLE_USERS,
-            values,
-            "${DatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(user.id.toString())
-        )
-        db.close()
-        return rowsAffected
+        try {
+            val args = arrayOf(
+                user.name,
+                user.username,
+                user.password,
+                user.email,
+                user.birthdate,
+                user.sex,
+                user.type,
+                user.photoUrl,
+                user.cpf_cnpj,
+                user.id // O ID do usuário que você deseja atualizar
+            )
+
+            db.execSQL(
+                "UPDATE users SET name=?, username=?, password=?, email=?, birthdate=?, sex=?, type=?, photoUrl=?, cpf_cnpj=? WHERE id=?",
+                args
+            )
+
+            Log.d("Database", "Usuário atualizado com sucesso.")
+            return 1 // Retorna 1 para indicar sucesso (ou outro valor se preferir)
+        } catch (e: Exception) {
+            Log.e("Database", "Erro ao atualizar o usuário: ${e.message}")
+            return 0 // Retorna 0 para indicar falha (ou outro valor se preferir)
+        } finally {
+            db.close()
+        }
     }
 
     override fun deleteUser(userId: Long) {
         val db = dbHelper.writableDatabase
-        db.delete(
-            DatabaseHelper.TABLE_USERS,
-            "${DatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(userId.toString())
-        )
-        db.close()
+        try {
+            val args = arrayOf(userId)
+            db.execSQL("DELETE FROM users WHERE id = ?", args)
+            Log.d("Database", "Usuário excluído com sucesso.")
+        } catch (e: Exception) {
+            Log.e("Database", "Erro ao excluir o usuário: ${e.message}")
+        } finally {
+            db.close()
+        }
     }
 }
 

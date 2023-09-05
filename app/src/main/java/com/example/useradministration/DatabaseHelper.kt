@@ -8,7 +8,7 @@ class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_NAME = "MyAppDatabase2.db"
+        private const val DATABASE_NAME = "MyApp5.db"
         private const val DATABASE_VERSION = 1
 
         // Tabela de usuários
@@ -22,23 +22,23 @@ class DatabaseHelper(context: Context) :
         const val COLUMN_SEX = "sex"
         const val COLUMN_TYPE = "type"
         const val COLUMN_CPF_CNPJ = "cpf_cnpj"
-        const val COLUMN_PHOTO_URL = "photoUrl"  // Removendo a NOT NULL aqui
+        const val COLUMN_PHOTO_URL = "photoUrl"
         const val COLUMN_ADDRESS = "address"
 
         // Criação da tabela de usuários
         private const val CREATE_USERS_TABLE = """
             CREATE TABLE $TABLE_USERS (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                $COLUMN_NAME TEXT,
-                $COLUMN_USERNAME TEXT UNIQUE,
-                $COLUMN_PASSWORD TEXT,
-                $COLUMN_EMAIL TEXT,
-                $COLUMN_BIRTHDATE TEXT,
-                $COLUMN_SEX TEXT,
-                $COLUMN_TYPE TEXT,
-                $COLUMN_CPF_CNPJ TEXT,
-                $COLUMN_PHOTO_URL TEXT,
-                $COLUMN_ADDRESS TEXT
+                $COLUMN_NAME TEXT NOT NULL,
+                $COLUMN_USERNAME TEXT NOT NULL UNIQUE,
+                $COLUMN_PASSWORD TEXT NOT NULL,
+                $COLUMN_EMAIL TEXT NOT NULL,
+                $COLUMN_BIRTHDATE TEXT NOT NULL,
+                $COLUMN_SEX TEXT NOT NULL,
+                $COLUMN_TYPE TEXT NOT NULL,
+                $COLUMN_CPF_CNPJ TEXT NOT NULL,
+                $COLUMN_PHOTO_URL TEXT NOT NULL,
+                $COLUMN_ADDRESS TEXT NOT NULL
             )
         """
     }

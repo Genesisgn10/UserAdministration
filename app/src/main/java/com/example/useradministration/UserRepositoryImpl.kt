@@ -11,13 +11,15 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
             put(DatabaseHelper.COLUMN_USERNAME, user.username)
             put(DatabaseHelper.COLUMN_PASSWORD, user.password)
             put(DatabaseHelper.COLUMN_EMAIL, user.email)
-            put(DatabaseHelper.COLUMN_BIRTHDATE, user.dateOfBirth)
+            put(DatabaseHelper.COLUMN_BIRTHDATE, user.birthdate)
+            put(DatabaseHelper.COLUMN_PHOTO_URL, user.photoUrl)
             put(DatabaseHelper.COLUMN_SEX, user.sex)
-            put(DatabaseHelper.COLUMN_TYPE, user.userType)
-            put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpfOrCnpj)
+            put(DatabaseHelper.COLUMN_TYPE, user.type)
+            put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpf_cnpj)
+            put(DatabaseHelper.COLUMN_ADDRESS, user.address)
         }
 
-       // db.insert(DatabaseHelper.TABLE_USERS, null, values)
+        // db.insert(DatabaseHelper.TABLE_USERS, null, values)
 
         try {
             val newRowId = db.insert(DatabaseHelper.TABLE_USERS, null, values)
@@ -39,11 +41,11 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper) : UserRepository2
             put(DatabaseHelper.COLUMN_USERNAME, user.username)
             put(DatabaseHelper.COLUMN_PASSWORD, user.password)
             put(DatabaseHelper.COLUMN_EMAIL, user.email)
-            put(DatabaseHelper.COLUMN_BIRTHDATE, user.dateOfBirth)
+            put(DatabaseHelper.COLUMN_BIRTHDATE, user.birthdate)
             put(DatabaseHelper.COLUMN_SEX, user.sex)
-            put(DatabaseHelper.COLUMN_TYPE, user.userType)
+            put(DatabaseHelper.COLUMN_TYPE, user.type)
             put(DatabaseHelper.COLUMN_PHOTO_URL, user.photoUrl)
-            put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpfOrCnpj)
+            put(DatabaseHelper.COLUMN_CPF_CNPJ, user.cpf_cnpj)
         }
 
         val rowsAffected = db.update(

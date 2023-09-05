@@ -42,16 +42,16 @@ class UserListFragment : Fragment() {
 
         val user = User(
             id = 3,
-            name = "carlos",
-            username = "joaodsfds",
+            name = "bora",
+            username = "aquin2o",
             password = "123",
             email = "email@exampsle.com",
-            dateOfBirth = "01/01/1993",
+            birthdate = "01/01/1993",
             sex = "Masculinos",
             address = "asdasd",
             photoUrl = "asda",
-            userType = "ss",
-            cpfOrCnpj = "123456789023"
+            type = "ss",
+            cpf_cnpj = "123456789023"
         )
 
         userRepository.addUser(user)

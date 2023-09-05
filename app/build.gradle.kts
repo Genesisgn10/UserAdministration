@@ -40,7 +40,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -59,4 +58,9 @@ dependencies {
 
     val koinVersion = "3.4.3"
     implementation("io.insert-koin:koin-android:$koinVersion")
+
+    val lifecycle_version = "2.6.1"
+
+    // ViewModel
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 }

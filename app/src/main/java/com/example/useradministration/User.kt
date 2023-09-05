@@ -21,3 +21,18 @@ data class User(
     @ColumnInfo(name = "photoUrl") @NonNull val photoUrl: String,
     @ColumnInfo(name = "address") @NonNull val address: String
 )
+
+
+data class UserModel(
+    val id: Int?,
+    val name: String,
+    val username: String,
+    val password: String,
+    val email: String,
+    val birthdate: String,
+    val sex: String,
+    val type: String,
+    val cpf_cnpj: String,
+    val photoUrl: String,
+    val address: String
+)

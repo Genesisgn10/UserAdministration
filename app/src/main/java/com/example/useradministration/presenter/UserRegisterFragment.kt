@@ -28,6 +28,7 @@ class UserRegisterFragment : Fragment() {
     private val args: UserRegisterFragmentArgs? by navArgs()
     private var currentTextWatcher: TextWatcher? = null
     private var isUpdate = false
+    private val SELECT_IMAGE_REQUEST = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,25 +37,6 @@ class UserRegisterFragment : Fragment() {
     ): View {
         _binding = FragmentUserRegistrationBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    private fun pickImage() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, SELECT_IMAGE_REQUEST)
-    }
-
-    private val SELECT_IMAGE_REQUEST = 1
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val selectedImageUri = data.data
-            val bitmap = MediaStore.Images.Media.getBitmap(
-                requireActivity().contentResolver,
-                selectedImageUri
-            )
-            binding.imageView.setImageBitmap(bitmap)
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,6 +58,23 @@ class UserRegisterFragment : Fragment() {
         setupSubmitButton()
     }
 
+    private fun pickImage() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, SELECT_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImageUri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(
+                requireActivity().contentResolver,
+                selectedImageUri
+            )
+            binding.imageView.setImageBitmap(bitmap)
+        }
+    }
 
     private fun populate() {
         binding.tvName.editText?.setText(args?.user?.name)
@@ -91,7 +90,6 @@ class UserRegisterFragment : Fragment() {
         binding.text.addTextChangedListener(cpfMaskWatcher)
         currentTextWatcher = cpfMaskWatcher
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            // Remove o TextWatcher existente, se houver
             currentTextWatcher?.let {
                 binding.text.removeTextChangedListener(it)
             }
@@ -107,10 +105,6 @@ class UserRegisterFragment : Fragment() {
                     val cnpjMaskWatcher = MaskTextWatcher(binding.text, "##.###.###/####-##")
                     binding.text.addTextChangedListener(cnpjMaskWatcher)
                     currentTextWatcher = cnpjMaskWatcher
-                }
-
-                else -> {
-
                 }
             }
         }

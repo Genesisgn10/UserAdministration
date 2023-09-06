@@ -1,14 +1,14 @@
-package com.example.useradministration
+package com.example.useradministration.presenter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.useradministration.User
 import com.example.useradministration.databinding.UserItemBinding
 
 class UserAdapter(
-    private val categories: MutableList<User>
+    private val user: MutableList<User>
 ) : RecyclerView.Adapter<UserAdapter.UsersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
@@ -18,26 +18,32 @@ class UserAdapter(
     }
 
     override fun onBindViewHolder(holder: UsersViewHolder, position: Int) {
-        val category = categories[position]
+        val user = user[position]
 
         with(holder) {
-            binding.name.text = category.name
-            binding.username.text = category.username
+            binding.name.text = user.name
+            binding.username.text = user.username
+            binding.card.setOnClickListener {
+                val action =
+                    UserListFragmentDirections
+                        .actionUserListFragmentToUserRegisterFragment(user)
+                it.findNavController().navigate(action)
+            }
         }
     }
 
     fun removeItem(position: Int): User {
-        val deletedItem = categories.removeAt(position)
+        val deletedItem = user.removeAt(position)
         notifyItemRemoved(position)
         return deletedItem
     }
 
     fun restoreItem(position: Int, item: User) {
-        categories.add(position, item)
+        user.add(position, item)
         notifyItemInserted(position)
     }
 
-    override fun getItemCount() = categories.size
+    override fun getItemCount() = user.size
 
     inner class UsersViewHolder(val binding: UserItemBinding) :
         RecyclerView.ViewHolder(binding.root)

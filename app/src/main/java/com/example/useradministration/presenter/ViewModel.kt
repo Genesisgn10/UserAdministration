@@ -1,9 +1,11 @@
-package com.example.useradministration
+package com.example.useradministration.presenter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.useradministration.User
+import com.example.useradministration.UserRepository2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,6 +27,10 @@ class ViewModel(private val userRepository: UserRepository2) : ViewModel() {
 
     fun addUser(user: User){
         userRepository.addUser(user)
+    }
+
+    fun updateUser(user: User){
+        userRepository.updateUser(user)
     }
 
 }

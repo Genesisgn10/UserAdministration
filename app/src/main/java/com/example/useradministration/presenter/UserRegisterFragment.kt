@@ -1,16 +1,18 @@
-package com.example.useradministration
+package com.example.useradministration.presenter
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.useradministration.MaskTextWatcher
+import com.example.useradministration.R
+import com.example.useradministration.User
+import com.example.useradministration.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
@@ -20,6 +22,12 @@ class UserRegisterFragment : Fragment() {
     private var _binding: FragmentUserRegistrationBinding? = null
     private val binding get() = _binding!!
     private val viewmodel: ViewModel by inject()
+
+    val args: UserRegisterFragmentArgs? by navArgs()
+
+    private var currentTextWatcher: TextWatcher? = null
+
+    private var isUpdate = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +41,11 @@ class UserRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (args?.user != null) {
+            populate()
+            isUpdate = true
+        }
+
         setupRadioGroup()
         setupPasswordValidation()
         setupNameValidation()
@@ -40,8 +53,15 @@ class UserRegisterFragment : Fragment() {
         setupSubmitButton()
     }
 
-    private var currentTextWatcher: TextWatcher? = null
 
+    private fun populate() {
+        binding.tvName.editText?.setText(args?.user?.name)
+        binding.tvUsername.editText?.setText(args?.user?.username)
+        binding.tvAddress.editText?.setText(args?.user?.address)
+        binding.tvPassword.editText?.setText(args?.user?.password)
+        binding.tvEmail.editText?.setText(args?.user?.email)
+        binding.tvNas.editText?.setText(args?.user?.birthdate)
+    }
 
     private fun setupRadioGroup() {
         val cpfMaskWatcher = MaskTextWatcher(binding.text, "###.###.###-##")
@@ -133,19 +153,24 @@ class UserRegisterFragment : Fragment() {
                 // Execute a lógica de envio aqui
                 val s = binding.tvName.editText?.text.toString()
                 val user = User(
-                    id = null,
+                    id = args?.user?.id,
                     name = binding.tvName.editText?.text.toString(),
                     username = binding.tvUsername.editText?.text.toString(),
                     password = binding.tvPassword.editText?.text.toString(),
                     email = binding.tvEmail.editText?.text.toString(),
-                    birthdate = binding.tvName.editText?.text.toString(),
+                    birthdate = binding.tvNas.editText?.text.toString(),
                     sex = binding.tvName.editText?.text.toString(),
                     type = binding.radioGroup.checkedRadioButtonId.toString(),
                     cpf_cnpj = binding.tvName.editText?.text.toString(),
                     photoUrl = binding.tvName.editText?.text.toString(),
                     address = binding.tvAddress.editText?.text.toString()
                 )
-                viewmodel.addUser(user)
+                if (isUpdate) {
+                    viewmodel.updateUser(user)
+                } else {
+                    viewmodel.addUser(user)
+                }
+                findNavController().popBackStack()
             }
         }
     }

@@ -2,6 +2,8 @@ package com.example.useradministration
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.useradministration.presenter.UserAdapter
+import com.example.useradministration.presenter.UserListFragment
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 

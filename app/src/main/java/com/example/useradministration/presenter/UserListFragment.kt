@@ -1,4 +1,4 @@
-package com.example.useradministration
+package com.example.useradministration.presenter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.useradministration.R
+import com.example.useradministration.SwipeToDeleteCallback
+import com.example.useradministration.User
+import com.example.useradministration.UserRepository2
 import com.example.useradministration.databinding.FragmentUserListBinding
 import org.koin.android.ext.android.inject
 

@@ -5,7 +5,10 @@ import com.example.useradministration.DatabaseHelper
 import com.example.useradministration.User
 import com.example.useradministration.UserDao
 
-class UserRepositoryDatabaseImpl(private val dbHelper: DatabaseHelper, private val userDao: UserDao) :
+class UserRepositoryDatabaseImpl(
+    private val dbHelper: DatabaseHelper,
+    private val userDao: UserDao
+) :
     UserRepositoryDatabase {
     override fun addUser(user: User) {
         val db = dbHelper.writableDatabase

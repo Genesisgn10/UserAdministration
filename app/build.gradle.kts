@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -62,8 +62,8 @@ dependencies {
     val lifecycle_version = "2.6.1"
 
     // ViewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
 
-  //  implementation("com.github.santalu:mask-edittext:1.1.0")
+
 
 }

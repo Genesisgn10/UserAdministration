@@ -10,15 +10,16 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import com.example.useradministration.MaskUtils.Companion.applyCnpjMask
-import com.example.useradministration.MaskUtils.Companion.applyCpfMask
+
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.google.android.material.textfield.TextInputLayout
+import org.koin.android.ext.android.inject
 
 class UserRegisterFragment : Fragment() {
 
     private var _binding: FragmentUserRegistrationBinding? = null
     private val binding get() = _binding!!
+    private val viewmodel: ViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,22 +40,36 @@ class UserRegisterFragment : Fragment() {
         setupSubmitButton()
     }
 
+    private var currentTextWatcher: TextWatcher? = null
+
+
     private fun setupRadioGroup() {
+        val cpfMaskWatcher = MaskTextWatcher(binding.text, "###.###.###-##")
+        binding.text.addTextChangedListener(cpfMaskWatcher)
+        currentTextWatcher = cpfMaskWatcher
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val hintResId = when (checkedId) {
+            // Remove o TextWatcher existente, se houver
+            currentTextWatcher?.let {
+                binding.text.removeTextChangedListener(it)
+            }
+
+            when (checkedId) {
                 R.id.radioPessoaFisica -> {
-                    applyCpfMask(binding.text)
-                    R.string.hint_cpf
+                    val cpfMaskWatcher = MaskTextWatcher(binding.text, "###.###.###-##")
+                    binding.text.addTextChangedListener(cpfMaskWatcher)
+                    currentTextWatcher = cpfMaskWatcher
                 }
 
                 R.id.radioPessoaJuridica -> {
-                    applyCnpjMask(binding.text)
-                    R.string.hint_cnpj
+                    val cnpjMaskWatcher = MaskTextWatcher(binding.text, "##.###.###/####-##")
+                    binding.text.addTextChangedListener(cnpjMaskWatcher)
+                    currentTextWatcher = cnpjMaskWatcher
                 }
 
-                else -> R.string.hint_default
+                else -> {
+
+                }
             }
-            binding.tvCpf.hint = getString(hintResId)
         }
     }
 
@@ -63,7 +78,7 @@ class UserRegisterFragment : Fragment() {
             validateField(
                 text.toString(),
                 binding.tvPassword,
-                ::isValidPassword,
+                ValidationUtils::isValidPassword,
                 R.string.error_password
             )
         }
@@ -71,7 +86,12 @@ class UserRegisterFragment : Fragment() {
 
     private fun setupNameValidation() {
         binding.editName.doOnTextChanged { text, _, _, _ ->
-            validateField(text.toString(), binding.tvName, ::isValidName, R.string.error_name)
+            validateField(
+                text.toString(),
+                binding.tvName,
+                ValidationUtils::isValidName,
+                R.string.error_name
+            )
         }
     }
 
@@ -80,10 +100,11 @@ class UserRegisterFragment : Fragment() {
             validateField(
                 binding.inputTextEmail.text.toString(),
                 binding.tvEmail,
-                ::isValidEmail,
+                ValidationUtils::isValidEmail,
                 R.string.error_email
             )
         }
+
     }
 
     private fun setupSubmitButton() {
@@ -91,25 +112,40 @@ class UserRegisterFragment : Fragment() {
             val passwordValid = validateField(
                 binding.editPassword.text.toString(),
                 binding.tvPassword,
-                ::isValidPassword,
+                ValidationUtils::isValidPassword,
                 R.string.error_password
             )
             val nameValid = validateField(
                 binding.editName.text.toString(),
                 binding.tvName,
-                ::isValidName,
+                ValidationUtils::isValidName,
                 R.string.error_name
             )
             val emailValid = validateField(
                 binding.inputTextEmail.text.toString(),
                 binding.tvEmail,
-                ::isValidEmail,
+                ValidationUtils::isValidEmail,
                 R.string.error_email
             )
 
             if (passwordValid && nameValid && emailValid) {
                 // Todos os campos são válidos, permitir envio
                 // Execute a lógica de envio aqui
+                val s = binding.tvName.editText?.text.toString()
+                val user = User(
+                    id = null,
+                    name = binding.tvName.editText?.text.toString(),
+                    username = binding.tvUsername.editText?.text.toString(),
+                    password = binding.tvPassword.editText?.text.toString(),
+                    email = binding.tvEmail.editText?.text.toString(),
+                    birthdate = binding.tvName.editText?.text.toString(),
+                    sex = binding.tvName.editText?.text.toString(),
+                    type = binding.radioGroup.checkedRadioButtonId.toString(),
+                    cpf_cnpj = binding.tvName.editText?.text.toString(),
+                    photoUrl = binding.tvName.editText?.text.toString(),
+                    address = binding.tvAddress.editText?.text.toString()
+                )
+                viewmodel.addUser(user)
             }
         }
     }
@@ -124,24 +160,10 @@ class UserRegisterFragment : Fragment() {
         if (!isValid) {
             textView.error = getString(errorResId)
         } else {
+            textView.isErrorEnabled = false
             textView.error = null
         }
         return isValid
-    }
-
-    private fun isValidPassword(password: String): Boolean {
-        val passwordRegex =
-            "^(?=.*[A-Z])(?=.*\\d).{8,}$" // Pelo menos 1 letra maiúscula, 1 número, mínimo de 8 caracteres
-        return password.matches(passwordRegex.toRegex())
-    }
-
-    private fun isValidName(name: String): Boolean {
-        return name.length >= 30
-    }
-
-    private fun isValidEmail(email: String): Boolean {
-        val pattern = Patterns.EMAIL_ADDRESS
-        return pattern.matcher(email).matches()
     }
 
     override fun onDestroyView() {

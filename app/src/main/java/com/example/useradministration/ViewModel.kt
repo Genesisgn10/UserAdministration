@@ -23,4 +23,8 @@ class ViewModel(private val userRepository: UserRepository2) : ViewModel() {
         }
     }
 
+    fun addUser(user: User){
+        userRepository.addUser(user)
+    }
+
 }

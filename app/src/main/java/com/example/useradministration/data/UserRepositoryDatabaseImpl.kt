@@ -1,9 +1,12 @@
-package com.example.useradministration
+package com.example.useradministration.data
 
 import android.util.Log
+import com.example.useradministration.DatabaseHelper
+import com.example.useradministration.User
+import com.example.useradministration.UserDao
 
-class UserRepositoryImpl(private val dbHelper: DatabaseHelper, private val userDao: UserDao) :
-    UserRepository2 {
+class UserRepositoryDatabaseImpl(private val dbHelper: DatabaseHelper, private val userDao: UserDao) :
+    UserRepositoryDatabase {
     override fun addUser(user: User) {
         val db = dbHelper.writableDatabase
 
@@ -84,7 +87,7 @@ class UserRepositoryImpl(private val dbHelper: DatabaseHelper, private val userD
     }
 }
 
-interface UserRepository2 {
+interface UserRepositoryDatabase {
     fun addUser(user: User)
     fun updateUser(user: User): Int
     fun deleteUser(userId: Long)

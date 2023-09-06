@@ -10,14 +10,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.useradministration.R
 import com.example.useradministration.SwipeToDeleteCallback
 import com.example.useradministration.User
-import com.example.useradministration.UserRepository2
 import com.example.useradministration.databinding.FragmentUserListBinding
 import org.koin.android.ext.android.inject
 
 class UserListFragment : Fragment() {
 
     private lateinit var binding: FragmentUserListBinding
-    private val userRepository: UserRepository2 by inject()
     private val viewModel: ViewModel by inject()
 
     override fun onCreateView(
@@ -46,7 +44,8 @@ class UserListFragment : Fragment() {
     }
 
     fun deleteItemFromDatabase(item: User) {
-        item.id?.let { userRepository.deleteUser(it.toLong()) }
+        item.id?.toLong()?.let { viewModel.deleteUser(it) }
+       // item.id?.let { userRepository.deleteUser(it.toLong()) }
     }
 
     private fun populateAdapter(userList: List<User>) {

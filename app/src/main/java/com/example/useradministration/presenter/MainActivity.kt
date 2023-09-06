@@ -1,7 +1,8 @@
-package com.example.useradministration
+package com.example.useradministration.presenter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.useradministration.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

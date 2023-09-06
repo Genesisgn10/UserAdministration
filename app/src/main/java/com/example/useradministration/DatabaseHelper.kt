@@ -7,9 +7,8 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-class DatabaseHelper(val context: Context) :
+class DatabaseHelper(private val context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-
 
     companion object {
         private const val DATABASE_NAME = "DatabaseTest.db"
@@ -51,7 +50,6 @@ class DatabaseHelper(val context: Context) :
         executeSqlScriptFromAssets(db, "stored_procedures.sql")
         db.execSQL(CREATE_USERS_TABLE)
     }
-
 
     // Método para executar um script SQL a partir de um arquivo na pasta assets
     private fun executeSqlScriptFromAssets(db: SQLiteDatabase, fileName: String) {

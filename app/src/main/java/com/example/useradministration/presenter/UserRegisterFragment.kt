@@ -1,10 +1,18 @@
 package com.example.useradministration.presenter
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -22,12 +30,11 @@ class UserRegisterFragment : Fragment() {
     private var _binding: FragmentUserRegistrationBinding? = null
     private val binding get() = _binding!!
     private val viewmodel: ViewModel by inject()
-
     private val args: UserRegisterFragmentArgs? by navArgs()
-
     private var currentTextWatcher: TextWatcher? = null
-
     private var isUpdate = false
+
+    private lateinit var resultLauncherActivityInfo: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,8 +45,27 @@ class UserRegisterFragment : Fragment() {
         return binding.root
     }
 
+    private fun pickImage(){
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, SELECT_IMAGE_REQUEST)
+    }
+    private val SELECT_IMAGE_REQUEST = 1
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImageUri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, selectedImageUri)
+            binding.imageView.setImageBitmap(bitmap)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.appCompatButton.setOnClickListener {
+            pickImage()
+        }
 
         if (args?.user != null) {
             populate()

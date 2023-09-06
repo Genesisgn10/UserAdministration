@@ -34,18 +34,13 @@ class UserListFragment : Fragment() {
         }
         viewModel.getUsers()
 
-        //  userRepository.addUser(user)
-        // userRepository.updateUser(user)
-        // userRepository.deleteUser(2)
-
         binding.fab.setOnClickListener {
-           findNavController().navigate(R.id.action_userListFragment_to_userRegisterFragment)
+            findNavController().navigate(R.id.action_userListFragment_to_userRegisterFragment)
         }
     }
 
     fun deleteItemFromDatabase(item: User) {
         item.id?.toLong()?.let { viewModel.deleteUser(it) }
-       // item.id?.let { userRepository.deleteUser(it.toLong()) }
     }
 
     private fun populateAdapter(userList: List<User>) {

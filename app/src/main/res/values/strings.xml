@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">UserAdministration</string>
+    <string name="error_email">Email invalido</string>
+    <string name="error_name">Nome invalido</string>
+    <string name="error_password">Senha invalida</string>
+    <string name="hint_cpf">CPF</string>
+    <string name="hint_cnpj">CNPJ</string>
+    <string name="hint_default">CPF/CNPJ</string>
 
     <string-array name="feelings">
-        <item>Sad</item>
-        <item>Dissatisfied</item>
-        <item>Satisfied</item>
-        <item>Happy</item>
-        <item>Excited</item>
+        <item>M</item>
+        <item>S</item>
     </string-array>
 </resources>

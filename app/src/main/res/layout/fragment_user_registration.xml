@@ -28,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -62,6 +63,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_username">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_password"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -89,12 +92,11 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address"
-       >
+        app:layout_constraintTop_toBottomOf="@+id/tv_address">
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
@@ -104,6 +106,7 @@
             android:inputType="none"
             app:simpleItems="@array/feelings"
             tools:ignore="LabelFor"
+            android:text="sexo"
             tools:text="Sexo" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -163,6 +166,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_cpf">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:inputType="date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -180,12 +184,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_nas">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_text_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

@@ -23,7 +23,7 @@ class UserRegisterFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewmodel: ViewModel by inject()
 
-    val args: UserRegisterFragmentArgs? by navArgs()
+    private val args: UserRegisterFragmentArgs? by navArgs()
 
     private var currentTextWatcher: TextWatcher? = null
 

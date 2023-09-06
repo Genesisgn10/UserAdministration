@@ -1,6 +1,8 @@
 package com.example.useradministration
 
 import androidx.room.Room
+import com.example.network.Service
+import com.example.useradministration.data.ServiceUser
 import com.example.useradministration.presenter.ViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -19,6 +21,8 @@ val serviceModule = module {
             "DatabaseTest.db"
         ).build()
     }
+
+    single { Service().createService(ServiceUser::class.java) }
 
     single { get<AppDatabase>().userDao() }
 }

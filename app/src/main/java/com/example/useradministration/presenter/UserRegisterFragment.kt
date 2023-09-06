@@ -86,9 +86,11 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun setupRadioGroup() {
+
         val cpfMaskWatcher = MaskTextWatcher(binding.text, "###.###.###-##")
         binding.text.addTextChangedListener(cpfMaskWatcher)
         currentTextWatcher = cpfMaskWatcher
+
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             currentTextWatcher?.let {
                 binding.text.removeTextChangedListener(it)

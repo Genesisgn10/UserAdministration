@@ -6,6 +6,7 @@
     <string name="hint_cpf">CPF</string>
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_default">CPF/CNPJ</string>
+    <string name="usuario_criado_com_sucesso">Usuario criado com sucesso</string>
 
     <string-array name="feelings">
         <item>M</item>

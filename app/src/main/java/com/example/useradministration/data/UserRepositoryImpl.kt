@@ -8,8 +8,7 @@ import com.example.useradministration.data.model.UserRequest
 class UserRepositoryImpl(private val serviceUser: ServiceUser) :
     UserRepository {
     override suspend fun postUser(user: UserRequest) {
-        val response = serviceUser.postUser(user).parseResponse()
-        when (response) {
+        when (val response = serviceUser.postUser(user).parseResponse()) {
             is Output.Success -> {
                 Log.d("PostUser", "Sucesso: ${response.value}")
             }

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -89,9 +90,9 @@ class UserRegisterFragment : Fragment() {
         currentMaskWatcher = maskWatcher
 
         if (mask == maskMap[R.id.radioPessoaFisica]) {
-            binding.textInputCpf.hint =getString( R.string.hint_cpf)
+            binding.textInputCpf.hint = getString(R.string.hint_cpf)
         } else if (mask == maskMap[R.id.radioPessoaJuridica]) {
-            binding.textInputCpf.hint =getString( R.string.hint_cnpj)
+            binding.textInputCpf.hint = getString(R.string.hint_cnpj)
         }
     }
 
@@ -167,6 +168,8 @@ class UserRegisterFragment : Fragment() {
                 } else {
                     userViewModel.addUser(user)
                     userViewModel.postUser(user)
+                    Toast.makeText(context,
+                        getString(R.string.usuario_criado_com_sucesso), Toast.LENGTH_SHORT).show()
                 }
                 findNavController().popBackStack()
             }

@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.database.User
+import com.example.useradministration.data.model.UserRequest
+import com.example.useradministration.data.model.toUserRequest
 import com.example.useradministration.domain.PostUserUseCase
 import com.example.useradministration.domain.UserUseCase
 import kotlinx.coroutines.Dispatchers
@@ -14,8 +16,8 @@ import kotlinx.coroutines.withContext
 class UserViewModel(private val useCase: UserUseCase, private val postUser: PostUserUseCase) :
     ViewModel() {
 
-    private val _users = MutableLiveData<List<com.example.database.User>>()
-    val users = _users as LiveData<List<com.example.database.User>>
+    private val _users = MutableLiveData<List<User>>()
+    val users = _users as LiveData<List<User>>
 
     fun getUsers() {
         viewModelScope.launch {
@@ -26,11 +28,11 @@ class UserViewModel(private val useCase: UserUseCase, private val postUser: Post
         }
     }
 
-    fun addUser(user: com.example.database.User) {
+    fun addUser(user: User) {
         useCase.addUser(user)
     }
 
-    fun updateUser(user: com.example.database.User) {
+    fun updateUser(user: User) {
         useCase.updateUser(user)
     }
 
@@ -38,11 +40,10 @@ class UserViewModel(private val useCase: UserUseCase, private val postUser: Post
         useCase.deleteUser(id)
     }
 
-    fun postUser(user: com.example.database.User) {
+    fun postUser(user: User) {
         viewModelScope.launch {
-            //postUser.invoke(user)
+            postUser.invoke(user.toUserRequest() )
         }
-
     }
 
 }

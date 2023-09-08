@@ -166,6 +166,7 @@ class UserRegisterFragment : Fragment() {
                     userViewModel.updateUser(user)
                 } else {
                     userViewModel.addUser(user)
+                    userViewModel.postUser(user)
                 }
                 findNavController().popBackStack()
             }

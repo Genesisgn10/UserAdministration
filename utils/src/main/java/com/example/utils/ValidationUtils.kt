@@ -1,4 +1,4 @@
-package com.example.useradministration
+package com.example.utils
 
 import android.util.Patterns
 

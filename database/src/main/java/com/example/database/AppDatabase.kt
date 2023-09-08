@@ -1,4 +1,4 @@
-package com.example.useradministration
+package com.example.database
 
 import android.content.Context
 import androidx.room.Database

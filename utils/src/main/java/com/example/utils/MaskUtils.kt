@@ -1,9 +1,7 @@
-package com.example.useradministration
+package com.example.utils
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
 import android.widget.EditText
-import com.google.android.material.textfield.TextInputEditText
 
 
 class MaskTextWatcher(private val editText: EditText, private val mask: String) : TextWatcher {
@@ -26,17 +24,12 @@ class MaskTextWatcher(private val editText: EditText, private val mask: String) 
         isFormatting = true
 
         val text = editable.toString()
+        val formattedText = applyMask(text)
 
-        if (text.length <= mask.length) {
-            val formattedText = applyMask(text)
+        if (formattedText != text) {
             editText.removeTextChangedListener(this)
             editText.setText(formattedText)
             editText.setSelection(formattedText.length)
-            editText.addTextChangedListener(this)
-        } else {
-            editText.removeTextChangedListener(this)
-            editText.setText(text.substring(0, mask.length))
-            editText.setSelection(mask.length)
             editText.addTextChangedListener(this)
         }
 

@@ -72,4 +72,10 @@ dependencies {
     //Modulo network
     implementation(project(":network"))
 
+    //Modulo database
+    implementation(project(":database"))
+
+    //Modulo utils
+    implementation(project(":utils"))
+
 }

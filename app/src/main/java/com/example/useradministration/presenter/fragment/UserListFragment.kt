@@ -1,4 +1,4 @@
-package com.example.useradministration.presenter
+package com.example.useradministration.presenter.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,14 +9,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.useradministration.R
 import com.example.useradministration.SwipeToDeleteCallback
-import com.example.useradministration.User
+import com.example.database.User
 import com.example.useradministration.databinding.FragmentUserListBinding
+import com.example.useradministration.presenter.adapter.UserAdapter
+import com.example.useradministration.presenter.UserViewModel
 import org.koin.android.ext.android.inject
 
 class UserListFragment : Fragment() {
 
     private lateinit var binding: FragmentUserListBinding
-    private val viewModel: ViewModel by inject()
+    private val userViewModel: UserViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,21 +31,21 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.users.observe(viewLifecycleOwner) {
+        userViewModel.users.observe(viewLifecycleOwner) {
             populateAdapter(it)
         }
-        viewModel.getUsers()
+        userViewModel.getUsers()
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_userListFragment_to_userRegisterFragment)
         }
     }
 
-    fun deleteItemFromDatabase(item: User) {
-        item.id?.toLong()?.let { viewModel.deleteUser(it) }
+    fun deleteItemFromDatabase(item: com.example.database.User) {
+        item.id?.toLong()?.let { userViewModel.deleteUser(it) }
     }
 
-    private fun populateAdapter(userList: List<User>) {
+    private fun populateAdapter(userList: List<com.example.database.User>) {
         if (userList.isNotEmpty()) {
             val adapter = UserAdapter(userList.toMutableList())
             val itemTouchHelper =

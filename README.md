@@ -12,5 +12,5 @@ Este projeto foi desenvolvido com o objetivo de proporcionar uma solução flex�
 instruções
 
 * Para cadastrar use o Floating Action Button
-* Para excluir arraste da esquerda pra direita
+* Para excluir arraste da direita pra esquerda
 * pra editar so clicar no elemento da lista

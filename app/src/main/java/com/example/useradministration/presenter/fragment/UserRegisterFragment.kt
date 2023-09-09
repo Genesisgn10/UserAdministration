@@ -17,12 +17,15 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.database.User
-import com.example.utils.MaskTextWatcher
 import com.example.useradministration.R
 import com.example.utils.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.example.useradministration.presenter.UserViewModel
 import com.example.useradministration.toBase64
+import com.example.utils.Const.MASK_CNPJ
+import com.example.utils.Const.MASK_CPF
+import com.example.utils.Const.MASK_DATA
+import com.example.utils.MaskUtils.applyMaskToEditText
 import com.example.utils.ValidationUtils.calcularIdade
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
@@ -37,11 +40,10 @@ class UserRegisterFragment : Fragment() {
 
     private var isUpdate = false
     private val SELECT_IMAGE_REQUEST = 1
-    private var currentMaskWatcher: MaskTextWatcher? = null
 
     private val maskMap = mapOf(
-        R.id.radioPessoaFisica to "###.###.###-##",
-        R.id.radioPessoaJuridica to "##.###.###/####-##"
+        R.id.radioPessoaFisica to MASK_CPF,
+        R.id.radioPessoaJuridica to MASK_CNPJ
     )
 
     override fun onCreateView(
@@ -58,12 +60,16 @@ class UserRegisterFragment : Fragment() {
         setupUI()
         setupValidationListeners()
         setupSubmitButton()
+        setMask()
+    }
+
+    private fun setMask() {
+        applyMaskToEditText(binding.editData, MASK_DATA)
+        updateCpfCnpjMask(binding.radioGroup.checkedRadioButtonId)
     }
 
     private fun setupUI() {
-        binding.appCompatButton.setOnClickListener {
-            pickImage()
-        }
+        binding.appCompatButton.setOnClickListener { pickImage() }
 
         args?.user?.let {
             populate(it)
@@ -71,7 +77,6 @@ class UserRegisterFragment : Fragment() {
         }
 
         setupRadioGroup()
-        updateCpfCnpjMask(binding.radioGroup.checkedRadioButtonId)
     }
 
     private fun setupRadioGroup() {
@@ -83,13 +88,7 @@ class UserRegisterFragment : Fragment() {
     private fun updateCpfCnpjMask(checkedId: Int) {
         val mask = maskMap[checkedId] ?: ""
 
-        currentMaskWatcher?.let {
-            binding.textEditCpfCnpj.removeTextChangedListener(it)
-        }
-
-        val maskWatcher = MaskTextWatcher(binding.textEditCpfCnpj, mask)
-        binding.textEditCpfCnpj.addTextChangedListener(maskWatcher)
-        currentMaskWatcher = maskWatcher
+        applyMaskToEditText(binding.textEditCpfCnpj, mask)
 
         if (mask == maskMap[R.id.radioPessoaFisica]) {
             binding.textInputCpfCnpj.hint = getString(R.string.hint_cpf)

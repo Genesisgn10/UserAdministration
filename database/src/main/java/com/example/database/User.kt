@@ -1,10 +1,9 @@
-package com.example.useradministration
+package com.example.database
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.jetbrains.annotations.NotNull
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -67,19 +66,3 @@ data class User(
         }
     }
 }
-
-
-
-data class UserModel(
-    val id: Int?,
-    val name: String,
-    val username: String,
-    val password: String,
-    val email: String,
-    val birthdate: String,
-    val sex: String,
-    val type: String,
-    val cpf_cnpj: String,
-    val photoUrl: String,
-    val address: String
-)

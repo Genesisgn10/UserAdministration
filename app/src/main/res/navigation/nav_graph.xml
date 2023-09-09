@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/userListFragment"
-        android:name="com.example.useradministration.presenter.UserListFragment"
+        android:name="com.example.useradministration.presenter.fragment.UserListFragment"
         android:label="lister"
         tools:layout="@layout/fragment_user_list">
         <action
@@ -15,20 +15,20 @@
             app:destination="@id/userRegisterFragment">
             <argument
                 android:name="user"
-                app:argType="com.example.useradministration.User" />
+                app:argType="com.example.database.User" />
         </action>
     </fragment>
 
     <fragment
         android:id="@+id/userRegisterFragment"
-        android:name="com.example.useradministration.presenter.UserRegisterFragment"
+        android:name="com.example.useradministration.presenter.fragment.UserRegisterFragment"
         android:label="register"
         tools:layout="@layout/fragment_user_registration">
 
         <argument
             android:name="user"
             android:defaultValue="@null"
-            app:argType="com.example.useradministration.User"
+            app:argType="com.example.database.User"
             app:nullable="true" />
 
     </fragment>

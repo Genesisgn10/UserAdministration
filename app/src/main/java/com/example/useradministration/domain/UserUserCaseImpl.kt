@@ -1,6 +1,6 @@
 package com.example.useradministration.domain
 
-import com.example.useradministration.User
+import com.example.database.User
 import com.example.useradministration.data.UserRepositoryDatabase
 
 class UserUserCaseImpl(private val userRepository: UserRepositoryDatabase) : UserUseCase {

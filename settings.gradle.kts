@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 rootProject.name = "UserAdministration"
 include(":app")
 include(":network")
+include(":database")
+include(":utils")

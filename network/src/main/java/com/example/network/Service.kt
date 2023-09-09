@@ -18,6 +18,6 @@ class Service {
         return retrofit.create(apiClass)
     }
 
-    private fun logInterceptor() =
+    fun logInterceptor() =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 }

@@ -1,4 +1,4 @@
-package com.example.useradministration
+package com.example.database
 
 import androidx.room.Dao
 import androidx.room.Query

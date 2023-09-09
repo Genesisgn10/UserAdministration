@@ -1,4 +1,4 @@
-package com.example.useradministration.data
+package com.example.useradministration.data.api
 
 import com.example.useradministration.data.model.UserRequest
 import okhttp3.ResponseBody

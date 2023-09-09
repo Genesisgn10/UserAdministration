@@ -1,4 +1,4 @@
-package com.example.useradministration
+package com.example.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -46,12 +46,15 @@ class DatabaseHelper(private val context: Context) :
         """
     }
 
+    fun deleteDatabase() {
+        context.deleteDatabase(DATABASE_NAME)
+    }
+
     override fun onCreate(db: SQLiteDatabase) {
         executeSqlScriptFromAssets(db, "stored_procedures.sql")
         db.execSQL(CREATE_USERS_TABLE)
     }
 
-    // Método para executar um script SQL a partir de um arquivo na pasta assets
     private fun executeSqlScriptFromAssets(db: SQLiteDatabase, fileName: String) {
         try {
             val inputStream = context.assets.open(fileName)
@@ -71,8 +74,5 @@ class DatabaseHelper(private val context: Context) :
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Atualizações do esquema, se necessário
-        // Você pode implementar isso de acordo com sua necessidade
-    }
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 }

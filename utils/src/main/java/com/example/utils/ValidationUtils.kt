@@ -21,7 +21,7 @@ object ValidationUtils {
         return pattern.matcher(email).matches()
     }
 
-    fun calcularIdade(dataNascimento: String): Int {
+    fun calculateAgeFromBirthdate(dataNascimento: String): Int {
         if (dataNascimento.isBlank()) {
             return -1
         }

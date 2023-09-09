@@ -26,7 +26,7 @@ import com.example.utils.Const.MASK_CNPJ
 import com.example.utils.Const.MASK_CPF
 import com.example.utils.Const.MASK_DATA
 import com.example.utils.MaskUtils.applyMaskToEditText
-import com.example.utils.ValidationUtils.calcularIdade
+import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 
@@ -196,7 +196,7 @@ class UserRegisterFragment : Fragment() {
         return passwordValid && nameValid && emailValid && cpf_cnpj && dataValid
     }
     private fun validData(): Boolean {
-        val idade = calcularIdade(binding.editData.text.toString())
+        val idade = calculateAgeFromBirthdate(binding.editData.text.toString())
         if (idade >= 18) {
             binding.inputData.error = null
             binding.inputData.isErrorEnabled = false

@@ -11,19 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.database.User
-import com.example.utils.MaskTextWatcher
 import com.example.useradministration.R
 import com.example.utils.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.example.useradministration.presenter.UserViewModel
+import com.example.useradministration.showSnackbar
 import com.example.useradministration.toBase64
-import com.example.utils.ValidationUtils.calcularIdade
+import com.example.utils.Const.MASK_CNPJ
+import com.example.utils.Const.MASK_CPF
+import com.example.utils.Const.MASK_DATA
+import com.example.utils.MaskUtils.applyMaskToEditText
+import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 
@@ -35,13 +38,9 @@ class UserRegisterFragment : Fragment() {
     private val userViewModel: UserViewModel by inject()
     private val args: UserRegisterFragmentArgs? by navArgs()
 
-    private var isUpdate = false
-    private val SELECT_IMAGE_REQUEST = 1
-    private var currentMaskWatcher: MaskTextWatcher? = null
-
     private val maskMap = mapOf(
-        R.id.radioPessoaFisica to "###.###.###-##",
-        R.id.radioPessoaJuridica to "##.###.###/####-##"
+        R.id.radioPessoaFisica to MASK_CPF,
+        R.id.radioPessoaJuridica to MASK_CNPJ
     )
 
     override fun onCreateView(
@@ -55,23 +54,25 @@ class UserRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
+        initializeUI()
+        setupRadioGroup()
         setupValidationListeners()
-        setupSubmitButton()
+        setMask()
     }
 
-    private fun setupUI() {
-        binding.appCompatButton.setOnClickListener {
-            pickImage()
-        }
-
-        args?.user?.let {
-            populate(it)
-            isUpdate = true
-        }
-
-        setupRadioGroup()
+    private fun setMask() {
+        applyMaskToEditText(binding.editData, MASK_DATA)
         updateCpfCnpjMask(binding.radioGroup.checkedRadioButtonId)
+    }
+
+    private fun initializeUI() {
+        binding.appCompatButton.setOnClickListener { pickImage() }
+        binding.btSubmit.setOnClickListener { setupSubmitButton() }
+        args?.user?.let { populateUser(it) }
+    }
+
+    private fun isUpdateUser(): Boolean {
+        return args?.user != null
     }
 
     private fun setupRadioGroup() {
@@ -83,13 +84,7 @@ class UserRegisterFragment : Fragment() {
     private fun updateCpfCnpjMask(checkedId: Int) {
         val mask = maskMap[checkedId] ?: ""
 
-        currentMaskWatcher?.let {
-            binding.textEditCpfCnpj.removeTextChangedListener(it)
-        }
-
-        val maskWatcher = MaskTextWatcher(binding.textEditCpfCnpj, mask)
-        binding.textEditCpfCnpj.addTextChangedListener(maskWatcher)
-        currentMaskWatcher = maskWatcher
+        applyMaskToEditText(binding.textEditCpfCnpj, mask)
 
         if (mask == maskMap[R.id.radioPessoaFisica]) {
             binding.textInputCpfCnpj.hint = getString(R.string.hint_cpf)
@@ -116,7 +111,7 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
-    private fun populate(user: User) {
+    private fun populateUser(user: User) {
         with(binding) {
             inputName.editText?.setText(user.name)
             tvUsername.editText?.setText(user.username)
@@ -162,19 +157,17 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun setupSubmitButton() {
-        binding.btSubmit.setOnClickListener {
-            if (validateFields()) {
-                val user = createUserFromInput()
-                if (isUpdate) {
-                    userViewModel.updateUser(user)
-                } else {
-                    userViewModel.addUser(user)
-                    userViewModel.postUser(user)
-                    Toast.makeText(context,
-                        getString(R.string.usuario_criado_com_sucesso), Toast.LENGTH_SHORT).show()
-                }
-                findNavController().popBackStack()
+        if (validateFields()) {
+            val user = createUserFromInput()
+            if (isUpdateUser()) {
+                userViewModel.updateUser(user)
+                view?.showSnackbar(getString(R.string.usuario_atualziado_com_sucesso))
+            } else {
+                userViewModel.addUser(user)
+                userViewModel.postUser(user)
+                view?.showSnackbar(getString(R.string.usuario_criado_com_sucesso))
             }
+            findNavController().popBackStack()
         }
     }
 
@@ -203,7 +196,7 @@ class UserRegisterFragment : Fragment() {
         return passwordValid && nameValid && emailValid && cpf_cnpj && dataValid
     }
     private fun validData(): Boolean {
-        val idade = calcularIdade(binding.editData.text.toString())
+        val idade = calculateAgeFromBirthdate(binding.editData.text.toString())
         if (idade >= 18) {
             binding.inputData.error = null
             binding.inputData.isErrorEnabled = false
@@ -274,5 +267,9 @@ class UserRegisterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val SELECT_IMAGE_REQUEST = 1
     }
 }

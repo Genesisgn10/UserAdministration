@@ -8,8 +8,7 @@ import java.util.Calendar
 object ValidationUtils {
 
     fun isValidPassword(password: String): Boolean {
-        val passwordRegex =
-            "^(?=.*[A-Z])(?=.*\\d).{8,}$"
+        val passwordRegex = "^(?=.*[A-Z])(?=.*\\d).{8,}$"
         return password.matches(passwordRegex.toRegex())
     }
 
@@ -22,15 +21,13 @@ object ValidationUtils {
         return pattern.matcher(email).matches()
     }
 
-
-    fun calcularIdade(dataNascimento: String): Int {
+    fun calculateAgeFromBirthdate(dataNascimento: String): Int {
         if (dataNascimento.isBlank()) {
-            // Trate o caso em que o texto da data de nascimento é vazio
-            return -1 // Ou outra forma de indicar um valor inválido
+            return -1
         }
 
         val formato = SimpleDateFormat("dd/MM/yyyy")
-        val dataNasc = formato.parse(dataNascimento) ?: return -1 // Trate erro de parsing
+        val dataNasc = formato.parse(dataNascimento) ?: return -1
 
         val dataAtual = Calendar.getInstance().time
 

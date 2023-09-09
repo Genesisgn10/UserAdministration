@@ -3,59 +3,68 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 
-class MaskTextWatcher(private val editText: EditText, private val mask: String) : TextWatcher {
+interface MaskFormatter {
+    fun format(text: String): String
+}
 
-    private var isFormatting = false
-
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-    override fun afterTextChanged(editable: Editable?) {
-        if (isFormatting) {
-            return
-        }
-
-        isFormatting = true
-
-        val text = editable.toString()
-        val formattedText = applyMask(text)
-
-        if (formattedText != text) {
-            editText.removeTextChangedListener(this)
-            editText.setText(formattedText)
-            editText.setSelection(formattedText.length)
-            editText.addTextChangedListener(this)
-        }
-
-        if (formattedText.length != mask.length) {
-            editText.error = "Campo Invalido"
-        } else {
-            editText.error = null
-        }
-
-        isFormatting = false
-    }
-
-    private fun applyMask(text: String): String {
-        val cleanedText = text.replace("[^0-9]".toRegex(), "")
+class GenericMaskFormatter(private val mask: String) : MaskFormatter {
+    override fun format(text: String): String {
+        val cleanedText = text.filter { it.isDigit() }
         val formattedText = StringBuilder()
+
         var textIndex = 0
-
-        for (i in mask.indices) {
+        mask.forEach { maskChar ->
             if (textIndex >= cleanedText.length) {
-                break
+                return formattedText.toString()
             }
-
-            val maskChar = mask[i]
             if (maskChar == '#') {
-                formattedText.append(cleanedText[textIndex])
-                textIndex++
+                formattedText.append(cleanedText[textIndex++])
             } else {
                 formattedText.append(maskChar)
             }
         }
 
         return formattedText.toString()
+    }
+}
+
+object MaskUtils {
+    private val textChangeListeners = mutableListOf<TextWatcher>()
+
+    fun applyMaskToEditText(editText: EditText, mask: String) {
+        removeAllTextChangedListeners(editText)
+
+        val maskFormatter = GenericMaskFormatter(mask)
+
+        val textWatcher = createTextWatcher(editText, maskFormatter, mask)
+        textChangeListeners.add(textWatcher)
+        editText.addTextChangedListener(textWatcher)
+    }
+
+    private fun createTextWatcher(editText: EditText, maskFormatter: MaskFormatter, mask: String) = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(editable: Editable?) {
+            val text = editable.toString()
+            val formattedText = maskFormatter.format(text)
+
+            if (formattedText != text) {
+                editText.removeTextChangedListener(this)
+                editText.setText(formattedText)
+                editText.setSelection(formattedText.length)
+                editText.addTextChangedListener(this)
+            }
+
+            editText.error = if (formattedText.length != mask.length) "Campo Inválido" else null
+        }
+    }
+
+    private fun removeAllTextChangedListeners(editText: EditText) {
+        for (listener in textChangeListeners) {
+            editText.removeTextChangedListener(listener)
+        }
+        textChangeListeners.clear()
     }
 }

@@ -16,12 +16,14 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.database.User
 import com.example.utils.MaskTextWatcher
 import com.example.useradministration.R
 import com.example.utils.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.example.useradministration.presenter.UserViewModel
 import com.example.useradministration.toBase64
+import com.example.utils.ValidationUtils.calcularIdade
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 
@@ -114,7 +116,7 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
-    private fun populate(user: com.example.database.User) {
+    private fun populate(user: User) {
         with(binding) {
             inputName.editText?.setText(user.name)
             tvUsername.editText?.setText(user.username)
@@ -195,9 +197,21 @@ class UserRegisterFragment : Fragment() {
             ValidationUtils::isValidEmail,
             R.string.error_email
         )
-        return passwordValid && nameValid && emailValid
-    }
+        val dataValid = validData()
+        val cpf_cnpj = binding.textEditCpfCnpj.error == null
 
+        return passwordValid && nameValid && emailValid && cpf_cnpj && dataValid
+    }
+    private fun validData(): Boolean {
+        val idade = calcularIdade(binding.editData.text.toString())
+        if (idade >= 18) {
+            binding.inputData.error = null
+            binding.inputData.isErrorEnabled = false
+        } else {
+            binding.inputData.error = getString(R.string.a_pessoa_tem_menos_de_18_anos)
+        }
+        return idade >= 18
+    }
     private fun getBitmapFromImageView(imageView: ImageView): Bitmap? {
         val drawable = imageView.drawable
         return if (drawable is BitmapDrawable) {
@@ -205,20 +219,28 @@ class UserRegisterFragment : Fragment() {
         } else null
     }
 
-    private fun createUserFromInput(): com.example.database.User {
+    private fun getSelectRadioButton(): String {
+        return when (binding.radioGroup.checkedRadioButtonId) {
+            R.id.radioPessoaFisica -> getString(R.string.hint_cpf)
+            R.id.radioPessoaJuridica -> getString(R.string.hint_cnpj)
+            else -> ""
+        }
+    }
+
+    private fun createUserFromInput(): User {
         val name = binding.inputName.editText?.text.toString()
         val username = binding.tvUsername.editText?.text.toString()
         val password = binding.inputPassword.editText?.text.toString()
         val email = binding.inputEmail.editText?.text.toString()
         val birthdate = binding.inputData.editText?.text.toString()
         val sex = binding.inputData.editText?.text.toString()
-        val type = binding.radioGroup.checkedRadioButtonId.toString()
+        val type = getSelectRadioButton()
         val cpf_cnpj = binding.textInputCpfCnpj.editText?.text.toString()
         val address = binding.tvAddress.editText?.text.toString()
         val bitmap = getBitmapFromImageView(binding.imageView)
         val photoUrl = bitmap?.toBase64(80) ?: ""
 
-        return com.example.database.User(
+        return User(
             id = args?.user?.id,
             name = name,
             username = username,

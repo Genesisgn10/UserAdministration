@@ -4,11 +4,11 @@ import com.example.database.User
 import com.example.useradministration.data.UserRepositoryDatabase
 
 class UserUserCaseImpl(private val userRepository: UserRepositoryDatabase) : UserUseCase {
-    override fun addUser(user: com.example.database.User) {
+    override fun addUser(user: User) {
         userRepository.addUser(user)
     }
 
-    override fun updateUser(user: com.example.database.User): Int {
+    override fun updateUser(user: User): Int {
         return userRepository.updateUser(user)
     }
 
@@ -16,15 +16,15 @@ class UserUserCaseImpl(private val userRepository: UserRepositoryDatabase) : Use
         userRepository.deleteUser(userId)
     }
 
-    override suspend fun getUsers(): List<com.example.database.User> {
+    override suspend fun getUsers(): List<User> {
         return userRepository.getUsers()
     }
 
 }
 
 interface UserUseCase {
-    fun addUser(user: com.example.database.User)
-    fun updateUser(user: com.example.database.User): Int
+    fun addUser(user: User)
+    fun updateUser(user: User): Int
     fun deleteUser(userId: Long)
-    suspend fun getUsers(): List<com.example.database.User>
+    suspend fun getUsers(): List<User>
 }

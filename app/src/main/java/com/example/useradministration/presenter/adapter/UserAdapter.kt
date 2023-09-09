@@ -10,7 +10,7 @@ import com.example.useradministration.fromBase64
 import com.example.useradministration.presenter.fragment.UserListFragmentDirections
 
 class UserAdapter(
-    private val user: MutableList<com.example.database.User>
+    private val user: MutableList<User>
 ) : RecyclerView.Adapter<UserAdapter.UsersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
@@ -33,20 +33,21 @@ class UserAdapter(
             binding.imageUser.setImageBitmap(user.photoUrl.fromBase64())
         }
     }
-
-    fun removeItem(position: Int): com.example.database.User {
+    fun updateData(newList: List<User>) {
+        user.clear()
+        user.addAll(newList)
+        notifyDataSetChanged()
+    }
+    fun removeItem(position: Int): User {
         val deletedItem = user.removeAt(position)
         notifyItemRemoved(position)
         return deletedItem
     }
-
-    fun restoreItem(position: Int, item: com.example.database.User) {
+    fun restoreItem(position: Int, item: User) {
         user.add(position, item)
         notifyItemInserted(position)
     }
-
     override fun getItemCount() = user.size
-
     inner class UsersViewHolder(val binding: UserItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

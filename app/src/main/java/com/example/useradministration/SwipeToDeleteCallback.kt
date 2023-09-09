@@ -20,7 +20,6 @@ class SwipeToDeleteCallback(
         val swipeFlags = ItemTouchHelper.LEFT
         return makeMovementFlags(0, swipeFlags)
     }
-
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -28,7 +27,6 @@ class SwipeToDeleteCallback(
     ): Boolean {
         return false
     }
-
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
 
@@ -36,10 +34,9 @@ class SwipeToDeleteCallback(
 
         val snackbar = Snackbar.make(
             recyclerView,
-            "Item deleted",
+            "Item deletado",
             Snackbar.LENGTH_LONG
         ).setAction("Undo") {
-            // Undo the deletion
             adapter.restoreItem(position, deletedItem)
         }
 
@@ -50,7 +47,6 @@ class SwipeToDeleteCallback(
                 }
             }
         })
-
         snackbar.show()
     }
 }

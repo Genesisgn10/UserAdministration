@@ -7,9 +7,14 @@
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_default">CPF/CNPJ</string>
     <string name="usuario_criado_com_sucesso">Usuario criado com sucesso</string>
+    <string name="usuario_cadastrado_com_sucesso">Usuario cadastrado com sucesso</string>
+
+    <string name="error_cpf_cnpj">CPF/CNPJ inválido</string>
+    <string name="a_pessoa_tem_menos_de_18_anos">A pessoa tem menos de 18 anos.</string>
 
     <string-array name="feelings">
-        <item>M</item>
-        <item>S</item>
+        <item>Masculino</item>
+        <item>Feminino</item>
+        <item>Prefiro não responder</item>
     </string-array>
 </resources>

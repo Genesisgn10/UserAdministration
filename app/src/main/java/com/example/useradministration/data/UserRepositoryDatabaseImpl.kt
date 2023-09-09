@@ -2,13 +2,14 @@ package com.example.useradministration.data
 
 import android.util.Log
 import com.example.database.DatabaseHelper
+import com.example.database.User
 
 class UserRepositoryDatabaseImpl(
     private val dbHelper: DatabaseHelper,
     private val userDao: com.example.database.UserDao
 ) :
     UserRepositoryDatabase {
-    override fun addUser(user: com.example.database.User) {
+    override fun addUser(user: User) {
         val db = dbHelper.writableDatabase
 
         try {
@@ -38,7 +39,7 @@ class UserRepositoryDatabaseImpl(
         }
     }
 
-    override fun updateUser(user: com.example.database.User): Int {
+    override fun updateUser(user: User): Int {
         val db = dbHelper.writableDatabase
 
         try {
@@ -52,7 +53,7 @@ class UserRepositoryDatabaseImpl(
                 user.type,
                 user.photoUrl,
                 user.cpf_cnpj,
-                user.id // O ID do usuário que você deseja atualizar
+                user.id
             )
 
             db.execSQL(
@@ -61,10 +62,10 @@ class UserRepositoryDatabaseImpl(
             )
 
             Log.d("Database", "Usuário atualizado com sucesso.")
-            return 1 // Retorna 1 para indicar sucesso (ou outro valor se preferir)
+            return 1
         } catch (e: Exception) {
             Log.e("Database", "Erro ao atualizar o usuário: ${e.message}")
-            return 0 // Retorna 0 para indicar falha (ou outro valor se preferir)
+            return 0
         } finally {
             db.close()
         }
@@ -83,14 +84,14 @@ class UserRepositoryDatabaseImpl(
         }
     }
 
-    override suspend fun getUsers(): List<com.example.database.User> {
+    override suspend fun getUsers(): List<User> {
         return userDao.getAllUsers()
     }
 }
 
 interface UserRepositoryDatabase {
-    fun addUser(user: com.example.database.User)
-    fun updateUser(user: com.example.database.User): Int
+    fun addUser(user: User)
+    fun updateUser(user: User): Int
     fun deleteUser(userId: Long)
-    suspend fun getUsers(): List<com.example.database.User>
+    suspend fun getUsers(): List<User>
 }

@@ -82,17 +82,17 @@ class UserRegisterFragment : Fragment() {
         val mask = maskMap[checkedId] ?: ""
 
         currentMaskWatcher?.let {
-            binding.text.removeTextChangedListener(it)
+            binding.textEditCpfCnpj.removeTextChangedListener(it)
         }
 
-        val maskWatcher = MaskTextWatcher(binding.text, mask)
-        binding.text.addTextChangedListener(maskWatcher)
+        val maskWatcher = MaskTextWatcher(binding.textEditCpfCnpj, mask)
+        binding.textEditCpfCnpj.addTextChangedListener(maskWatcher)
         currentMaskWatcher = maskWatcher
 
         if (mask == maskMap[R.id.radioPessoaFisica]) {
-            binding.textInputCpf.hint = getString(R.string.hint_cpf)
+            binding.textInputCpfCnpj.hint = getString(R.string.hint_cpf)
         } else if (mask == maskMap[R.id.radioPessoaJuridica]) {
-            binding.textInputCpf.hint = getString(R.string.hint_cnpj)
+            binding.textInputCpfCnpj.hint = getString(R.string.hint_cnpj)
         }
     }
 
@@ -116,33 +116,33 @@ class UserRegisterFragment : Fragment() {
 
     private fun populate(user: com.example.database.User) {
         with(binding) {
-            tvName.editText?.setText(user.name)
+            inputName.editText?.setText(user.name)
             tvUsername.editText?.setText(user.username)
             tvAddress.editText?.setText(user.address)
-            tvPassword.editText?.setText(user.password)
-            tvEmail.editText?.setText(user.email)
-            tvNas.editText?.setText(user.birthdate)
+            inputPassword.editText?.setText(user.password)
+            inputEmail.editText?.setText(user.email)
+            inputData.editText?.setText(user.birthdate)
         }
     }
 
     private fun setupValidationListeners() {
         setupFieldValidation(
             binding.editPassword,
-            binding.tvPassword,
+            binding.inputPassword,
             ValidationUtils::isValidPassword,
             R.string.error_password
         )
 
         setupFieldValidation(
             binding.editName,
-            binding.tvName,
+            binding.inputName,
             ValidationUtils::isValidName,
             R.string.error_name
         )
 
         setupFieldValidation(
             binding.inputTextEmail,
-            binding.tvEmail,
+            binding.inputEmail,
             ValidationUtils::isValidEmail,
             R.string.error_email
         )
@@ -179,19 +179,19 @@ class UserRegisterFragment : Fragment() {
     private fun validateFields(): Boolean {
         val passwordValid = validateField(
             binding.editPassword.text.toString(),
-            binding.tvPassword,
+            binding.inputPassword,
             ValidationUtils::isValidPassword,
             R.string.error_password
         )
         val nameValid = validateField(
             binding.editName.text.toString(),
-            binding.tvName,
+            binding.inputName,
             ValidationUtils::isValidName,
             R.string.error_name
         )
         val emailValid = validateField(
             binding.inputTextEmail.text.toString(),
-            binding.tvEmail,
+            binding.inputEmail,
             ValidationUtils::isValidEmail,
             R.string.error_email
         )
@@ -206,14 +206,14 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun createUserFromInput(): com.example.database.User {
-        val name = binding.tvName.editText?.text.toString()
+        val name = binding.inputName.editText?.text.toString()
         val username = binding.tvUsername.editText?.text.toString()
-        val password = binding.tvPassword.editText?.text.toString()
-        val email = binding.tvEmail.editText?.text.toString()
-        val birthdate = binding.tvNas.editText?.text.toString()
-        val sex = binding.tvName.editText?.text.toString()
+        val password = binding.inputPassword.editText?.text.toString()
+        val email = binding.inputEmail.editText?.text.toString()
+        val birthdate = binding.inputData.editText?.text.toString()
+        val sex = binding.inputData.editText?.text.toString()
         val type = binding.radioGroup.checkedRadioButtonId.toString()
-        val cpf_cnpj = binding.tvName.editText?.text.toString()
+        val cpf_cnpj = binding.textInputCpfCnpj.editText?.text.toString()
         val address = binding.tvAddress.editText?.text.toString()
         val bitmap = getBitmapFromImageView(binding.imageView)
         val photoUrl = bitmap?.toBase64(80) ?: ""

@@ -4,7 +4,7 @@ import androidx.room.Room
 import com.example.database.AppDatabase
 import com.example.database.DatabaseHelper
 import com.example.network.Service
-import com.example.useradministration.data.ServiceUser
+import com.example.useradministration.data.api.ServiceUser
 import com.example.useradministration.data.UserRepository
 import com.example.useradministration.data.UserRepositoryDatabase
 import com.example.useradministration.data.UserRepositoryDatabaseImpl

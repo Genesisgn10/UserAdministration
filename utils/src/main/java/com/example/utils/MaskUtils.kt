@@ -29,7 +29,7 @@ class MaskTextWatcher(private val editText: EditText, private val mask: String) 
         }
 
         if (formattedText.length != mask.length) {
-            editText.error = "Tamanho inválido"
+            editText.error = "Campo Invalido"
         } else {
             editText.error = null
         }

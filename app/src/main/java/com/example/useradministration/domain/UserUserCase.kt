@@ -3,7 +3,7 @@ package com.example.useradministration.domain
 import com.example.database.User
 import com.example.useradministration.data.UserRepositoryDatabase
 
-class UserUserCaseImpl(private val userRepository: UserRepositoryDatabase) : UserUseCase {
+class UserUserCase(private val userRepository: UserRepositoryDatabase) : UserUseCase {
     override fun addUser(user: User) {
         userRepository.addUser(user)
     }

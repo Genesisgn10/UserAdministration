@@ -12,7 +12,7 @@ import com.example.useradministration.data.UserRepositoryImpl
 import com.example.useradministration.domain.PostUser
 import com.example.useradministration.domain.PostUserUseCase
 import com.example.useradministration.domain.UserUseCase
-import com.example.useradministration.domain.UserUserCaseImpl
+import com.example.useradministration.domain.UserUserCase
 import com.example.useradministration.presenter.UserViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -33,6 +33,6 @@ val serviceModule = module {
     factory<PostUserUseCase> { PostUser(get()) }
     factory { UserViewModel(get(), get()) }
     factory<UserRepositoryDatabase> { UserRepositoryDatabaseImpl(get(), get()) }
-    factory<UserUseCase> { UserUserCaseImpl(get()) }
+    factory<UserUseCase> { UserUserCase(get()) }
     factory<UserRepository> { UserRepositoryImpl(get()) }
 }

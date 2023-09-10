@@ -9,6 +9,7 @@
     <string name="usuario_criado_com_sucesso">Usuario salvo com sucesso</string>
     <string name="usuario_atualziado_com_sucesso">Usuario atualizado com sucesso</string>
     <string name="usuario_cadastrado_com_sucesso">Usuario cadastrado com sucesso</string>
+    <string name="usuario_deletado_com_sucesso">Usuario deletado com sucesso</string>
 
     <string name="error_cpf_cnpj">CPF/CNPJ inválido</string>
     <string name="a_pessoa_tem_menos_de_18_anos">A pessoa tem menos de 18 anos.</string>

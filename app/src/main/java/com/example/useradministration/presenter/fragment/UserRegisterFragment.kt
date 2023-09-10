@@ -20,15 +20,18 @@ import com.example.useradministration.R
 import com.example.utils.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
 import com.example.useradministration.presenter.UserViewModel
+import com.example.useradministration.resizeToMaxSize
 import com.example.useradministration.showSnackbar
 import com.example.useradministration.toBase64
 import com.example.utils.Const.MASK_CNPJ
 import com.example.utils.Const.MASK_CPF
 import com.example.utils.Const.MASK_DATA
+import com.example.utils.Const.maxSizeInBytes
 import com.example.utils.MaskUtils.applyMaskToEditText
 import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
+import java.io.ByteArrayOutputStream
 
 class UserRegisterFragment : Fragment() {
 
@@ -54,6 +57,10 @@ class UserRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         initializeUI()
         setupRadioGroup()
         setupValidationListeners()
@@ -195,6 +202,7 @@ class UserRegisterFragment : Fragment() {
 
         return passwordValid && nameValid && emailValid && cpf_cnpj && dataValid
     }
+
     private fun validData(): Boolean {
         val idade = calculateAgeFromBirthdate(binding.editData.text.toString())
         if (idade >= 18) {
@@ -205,11 +213,18 @@ class UserRegisterFragment : Fragment() {
         }
         return idade >= 18
     }
+
     private fun getBitmapFromImageView(imageView: ImageView): Bitmap? {
         val drawable = imageView.drawable
         return if (drawable is BitmapDrawable) {
             drawable.bitmap
         } else null
+    }
+
+    private fun getImageSizeInBytes(bitmap: Bitmap): Long {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        return stream.toByteArray().size.toLong()
     }
 
     private fun getSelectRadioButton(): String {
@@ -231,7 +246,14 @@ class UserRegisterFragment : Fragment() {
         val cpf_cnpj = binding.textInputCpfCnpj.editText?.text.toString()
         val address = binding.tvAddress.editText?.text.toString()
         val bitmap = getBitmapFromImageView(binding.imageView)
-        val photoUrl = bitmap?.toBase64(80) ?: ""
+
+        val resizedBitmap = if (bitmap != null && getImageSizeInBytes(bitmap) > maxSizeInBytes) {
+            bitmap.resizeToMaxSize(maxSizeInBytes)
+        } else {
+            bitmap
+        }
+
+        val photoUrl = resizedBitmap?.toBase64(80) ?: ""
 
         return User(
             id = args?.user?.id,

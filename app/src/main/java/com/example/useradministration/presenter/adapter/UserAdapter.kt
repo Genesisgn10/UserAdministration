@@ -9,6 +9,7 @@ import com.example.useradministration.databinding.UserItemBinding
 import com.example.useradministration.fromBase64
 import com.example.useradministration.presenter.fragment.UserListFragmentDirections
 
+
 class UserAdapter(
     private val user: MutableList<User>
 ) : RecyclerView.Adapter<UserAdapter.UsersViewHolder>() {
@@ -43,10 +44,15 @@ class UserAdapter(
         notifyItemRemoved(position)
         return deletedItem
     }
+    fun getData(): MutableList<User> {
+        return user
+    }
     fun restoreItem(position: Int, item: User) {
         user.add(position, item)
         notifyItemInserted(position)
+
     }
+
     override fun getItemCount() = user.size
     inner class UsersViewHolder(val binding: UserItemBinding) :
         RecyclerView.ViewHolder(binding.root)

@@ -5,7 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/error"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:text="Algo deu errado :("
+        android:layout_height="wrap_content"/>
+
     <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_editor_absoluteX="0dp">

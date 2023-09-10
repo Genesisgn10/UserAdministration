@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -28,6 +29,10 @@ import com.example.utils.Const.MASK_CPF
 import com.example.utils.Const.MASK_DATA
 import com.example.utils.Const.maxSizeInBytes
 import com.example.utils.MaskUtils.applyMaskToEditText
+import com.example.utils.StateError
+import com.example.utils.StateLoading
+import com.example.utils.StateSuccess
+import com.example.utils.StateSuccessV2
 import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
@@ -57,6 +62,7 @@ class UserRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observer()
         initView()
     }
 
@@ -163,18 +169,34 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
+    private fun observer() {
+        userViewModel.users.observe(viewLifecycleOwner){
+            when(it){
+                is StateSuccessV2 -> {
+                    view?.showSnackbar(getString(R.string.usuario_state))
+                    findNavController().popBackStack()
+                }
+                is StateLoading -> {}
+                is StateError -> showError(it.errorData)
+                else -> {}
+            }
+        }
+    }
+
+    private fun showError(errorData: Error?) {
+        binding.error.isVisible = true
+        binding.scroll.isVisible = false
+    }
+
     private fun setupSubmitButton() {
         if (validateFields()) {
             val user = createUserFromInput()
             if (isUpdateUser()) {
                 userViewModel.updateUser(user)
-                view?.showSnackbar(getString(R.string.usuario_atualziado_com_sucesso))
             } else {
                 userViewModel.addUser(user)
                 userViewModel.postUser(user)
-                view?.showSnackbar(getString(R.string.usuario_criado_com_sucesso))
             }
-            findNavController().popBackStack()
         }
     }
 

@@ -7,7 +7,7 @@
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_default">CPF/CNPJ</string>
     <string name="usuario_criado_com_sucesso">Usuario salvo com sucesso</string>
-    <string name="usuario_atualziado_com_sucesso">Usuario atualizado com sucesso</string>
+    <string name="usuario_state">Acao realizada com sucesso</string>
     <string name="usuario_cadastrado_com_sucesso">Usuario cadastrado com sucesso</string>
     <string name="usuario_deletado_com_sucesso">Usuario deletado com sucesso</string>
 

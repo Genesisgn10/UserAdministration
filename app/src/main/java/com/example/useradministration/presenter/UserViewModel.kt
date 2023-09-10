@@ -9,6 +9,11 @@ import com.example.useradministration.data.model.UserRequest
 import com.example.useradministration.data.model.toUserRequest
 import com.example.useradministration.domain.PostUserUseCase
 import com.example.useradministration.domain.UserUseCase
+import com.example.utils.State
+import com.example.utils.StateError
+import com.example.utils.StateLoading
+import com.example.utils.StateSuccess
+import com.example.utils.StateSuccessV2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,24 +21,45 @@ import kotlinx.coroutines.withContext
 class UserViewModel(private val useCase: UserUseCase, private val postUser: PostUserUseCase) :
     ViewModel() {
 
-    private val _users = MutableLiveData<List<User>>()
-    val users = _users as LiveData<List<User>>
+    private val _users = MutableLiveData<State<List<User>>>()
+    val users = _users as LiveData<State<List<User>>>
 
     fun getUsers() {
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                useCase.getUsers()
+        try {
+            viewModelScope.launch {
+                _users.value = StateLoading(true)
+                val result = withContext(Dispatchers.IO) {
+                    useCase.getUsers()
+                }
+
+                _users.value = StateSuccess(result)
+                _users.value = StateLoading(false)
             }
-            _users.value = result
+        }catch (e: Exception){
+            _users.value = StateError()
         }
     }
 
     fun addUser(user: User) {
-        useCase.addUser(user)
+        try {
+            _users.value = StateLoading(true)
+            useCase.addUser(user)
+            _users.value = StateSuccessV2()
+            _users.value = StateLoading(false)
+        }catch (e: Exception){
+            _users.value = StateError()
+        }
     }
 
     fun updateUser(user: User) {
-        useCase.updateUser(user)
+        try {
+            _users.value = StateLoading(true)
+            useCase.updateUser(user)
+            _users.value = StateSuccessV2()
+            _users.value = StateLoading(false)
+        }catch (e: Exception){
+            _users.value = StateError()
+        }
     }
 
     fun deleteUser(id: Long) {

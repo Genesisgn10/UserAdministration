@@ -4,7 +4,7 @@ import com.example.database.User
 import com.example.useradministration.data.UserRepositoryDatabase
 
 class UserUserCase(private val userRepository: UserRepositoryDatabase) : UserUseCase {
-    override fun addUser(user: User) {
+    override suspend fun addUser(user: User) {
         userRepository.addUser(user)
     }
 
@@ -23,7 +23,7 @@ class UserUserCase(private val userRepository: UserRepositoryDatabase) : UserUse
 }
 
 interface UserUseCase {
-    fun addUser(user: User)
+    suspend fun addUser(user: User)
     fun updateUser(user: User): Int
     fun deleteUser(userId: Long)
     suspend fun getUsers(): List<User>

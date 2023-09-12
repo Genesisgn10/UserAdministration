@@ -1,5 +1,7 @@
 package com.example.useradministration.data
 
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.util.Log
 import com.example.database.DatabaseHelper
 import com.example.database.User
@@ -9,34 +11,54 @@ class UserRepositoryDatabaseImpl(
     private val userDao: com.example.database.UserDao
 ) :
     UserRepositoryDatabase {
-    override fun addUser(user: User) {
+    override suspend fun addUser(user: User) {
         val db = dbHelper.writableDatabase
+        val username = user.username
+        val name = user.name
+        val password = user.password
+        val email = user.email
+        val birthdate = user.birthdate
+        val sex = user.sex
+        val type = user.type
+        val cpf_cnpj = user.cpf_cnpj
+        val photoUrl = user.photoUrl
+        val address = user.address
 
-        try {
-            val args = arrayOf(
-                user.name,
-                user.username,
-                user.password,
-                user.email,
-                user.birthdate,
-                user.sex,
-                user.type,
-                user.cpf_cnpj,
-                user.photoUrl,
-                user.address
-            )
-
-            db.execSQL(
-                "INSERT INTO users (name, username, password, email, birthdate, sex, type, cpf_cnpj, photoUrl, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                args
-            )
-
-            Log.d("Database", "Usuário inserido com sucesso.")
-        } catch (e: Exception) {
-            Log.e("Database", "Erro ao inserir o usuário: ${e.message}")
-        } finally {
+        // Verificar se o nome de usuário já existe na tabela
+        if (usernameExists(db, username)) {
             db.close()
+            throw SQLiteException("Username já existe");
         }
+
+        // Nome de usuário não existe, insira o novo usuário
+        val insertQuery =
+            "INSERT INTO users (name, username, password, email, birthdate, sex, type, cpf_cnpj, photoUrl, address) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+        db.execSQL(
+            insertQuery,
+            arrayOf(
+                name,
+                username,
+                password,
+                email,
+                birthdate,
+                sex,
+                type,
+                cpf_cnpj,
+                photoUrl,
+                address
+            )
+        )
+
+        Log.d("Database", "Usuário inserido com sucesso.")
+        db.close()
+    }
+
+    private fun usernameExists(db: SQLiteDatabase, username: String): Boolean {
+        val query = "SELECT 1 FROM users WHERE username = ?"
+        val cursor = db.rawQuery(query, arrayOf(username))
+        return cursor.moveToFirst()
     }
 
     override fun updateUser(user: User): Int {
@@ -90,7 +112,7 @@ class UserRepositoryDatabaseImpl(
 }
 
 interface UserRepositoryDatabase {
-    fun addUser(user: User)
+    suspend fun addUser(user: User)
     fun updateUser(user: User): Int
     fun deleteUser(userId: Long)
     suspend fun getUsers(): List<User>

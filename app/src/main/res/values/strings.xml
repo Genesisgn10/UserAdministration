@@ -7,12 +7,23 @@
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_default">CPF/CNPJ</string>
     <string name="usuario_criado_com_sucesso">Usuario salvo com sucesso</string>
-    <string name="usuario_atualziado_com_sucesso">Usuario atualizado com sucesso</string>
+    <string name="usuario_state">Ação realizada com sucesso</string>
     <string name="usuario_cadastrado_com_sucesso">Usuario cadastrado com sucesso</string>
     <string name="usuario_deletado_com_sucesso">Usuario deletado com sucesso</string>
 
     <string name="error_cpf_cnpj">CPF/CNPJ inválido</string>
     <string name="a_pessoa_tem_menos_de_18_anos">A pessoa tem menos de 18 anos.</string>
+    <string name="algo_deu_errado">Algo deu errado :(</string>
+    <string name="cadastrar_usuario">Cadastrar Usuario</string>
+    <string name="selecionar_imagem">Selecionar Imagem</string>
+    <string name="pesquise_aqui">Pesquise aqui</string>
+    <string name="senha">Senha</string>
+    <string name="nome">Nome</string>
+    <string name="usuario">Usuario</string>
+    <string name="pessoa_f_sica">Pessoa Física</string>
+    <string name="pessoa_jur_dica">Pessoa Jurídica</string>
+    <string name="salvar">Salvar</string>
+    <string name="username_j_existe">Username já existe</string>
 
     <string-array name="feelings">
         <item>Masculino</item>

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import com.example.database.User
 import com.example.useradministration.R
 import com.example.utils.ValidationUtils
 import com.example.useradministration.databinding.FragmentUserRegistrationBinding
+import com.example.useradministration.fromBase64
 import com.example.useradministration.presenter.UserViewModel
 import com.example.useradministration.resizeToMaxSize
 import com.example.useradministration.showSnackbar
@@ -28,6 +30,9 @@ import com.example.utils.Const.MASK_CPF
 import com.example.utils.Const.MASK_DATA
 import com.example.utils.Const.maxSizeInBytes
 import com.example.utils.MaskUtils.applyMaskToEditText
+import com.example.utils.StateError
+import com.example.utils.StateLoading
+import com.example.utils.StateSuccessV2
 import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
@@ -57,6 +62,7 @@ class UserRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observer()
         initView()
     }
 
@@ -65,6 +71,22 @@ class UserRegisterFragment : Fragment() {
         setupRadioGroup()
         setupValidationListeners()
         setMask()
+    }
+
+    private fun observer() {
+        userViewModel.users.observe(viewLifecycleOwner) {
+            when (it) {
+                is StateSuccessV2 -> handleSuccess()
+                is StateLoading -> {}
+                is StateError -> showError(it.errorData)
+                else -> {}
+            }
+        }
+    }
+
+    private fun handleSuccess() {
+        view?.showSnackbar(getString(R.string.usuario_state))
+        findNavController().popBackStack()
     }
 
     private fun setMask() {
@@ -83,20 +105,25 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun setupRadioGroup() {
-        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            updateCpfCnpjMask(checkedId)
+        with(binding) {
+            radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                textEditCpfCnpj.text?.clear()
+                updateCpfCnpjMask(checkedId)
+            }
         }
     }
 
     private fun updateCpfCnpjMask(checkedId: Int) {
-        val mask = maskMap[checkedId] ?: ""
+        with(binding) {
+            val mask = maskMap[checkedId] ?: ""
 
-        applyMaskToEditText(binding.textEditCpfCnpj, mask)
+            applyMaskToEditText(textEditCpfCnpj, mask)
 
-        if (mask == maskMap[R.id.radioPessoaFisica]) {
-            binding.textInputCpfCnpj.hint = getString(R.string.hint_cpf)
-        } else if (mask == maskMap[R.id.radioPessoaJuridica]) {
-            binding.textInputCpfCnpj.hint = getString(R.string.hint_cnpj)
+            if (mask == maskMap[R.id.radioPessoaFisica]) {
+                textInputCpfCnpj.hint = getString(R.string.hint_cpf)
+            } else if (mask == maskMap[R.id.radioPessoaJuridica]) {
+                textInputCpfCnpj.hint = getString(R.string.hint_cnpj)
+            }
         }
     }
 
@@ -126,6 +153,8 @@ class UserRegisterFragment : Fragment() {
             inputPassword.editText?.setText(user.password)
             inputEmail.editText?.setText(user.email)
             inputData.editText?.setText(user.birthdate)
+            imageView.setImageBitmap(user.photoUrl.fromBase64())
+            textEditCpfCnpj.setText(user.cpf_cnpj)
         }
     }
 
@@ -163,18 +192,24 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
+    private fun showError(errorData: Error?) {
+        if (errorData?.message?.contains(getString(R.string.username_j_existe)) == true) {
+            view?.showSnackbar(errorData.message.toString())
+        } else {
+            binding.error.isVisible = true
+            binding.scroll.isVisible = false
+        }
+    }
+
     private fun setupSubmitButton() {
         if (validateFields()) {
             val user = createUserFromInput()
             if (isUpdateUser()) {
                 userViewModel.updateUser(user)
-                view?.showSnackbar(getString(R.string.usuario_atualziado_com_sucesso))
             } else {
                 userViewModel.addUser(user)
-                userViewModel.postUser(user)
-                view?.showSnackbar(getString(R.string.usuario_criado_com_sucesso))
+
             }
-            findNavController().popBackStack()
         }
     }
 

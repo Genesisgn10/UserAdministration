@@ -15,6 +15,9 @@ import com.example.useradministration.presenter.UserViewModel
 import com.example.useradministration.presenter.adapter.UserAdapter
 import com.example.useradministration.showSnackbar
 import com.example.utils.RecyclerViewSwipeHelper
+import com.example.utils.StateError
+import com.example.utils.StateLoading
+import com.example.utils.StateSuccess
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
@@ -42,11 +45,26 @@ class UserListFragment : Fragment() {
         getUsers()
     }
 
+    private fun showError(){
+        binding.error.isVisible = true
+        binding.recyclerView.isVisible = false
+        binding.progressBar.isVisible =  false
+    }
+
     private fun setupObservers(){
         userViewModel.users.observe(viewLifecycleOwner) {
-            populateAdapter(it)
-            binding.progressBar.isVisible = false
+            when(it){
+                is StateSuccess -> populateAdapter(it.data)
+                is StateLoading -> showLoading(it.loading)
+                is StateError -> showError()
+                else -> {}
+            }
         }
+    }
+
+    private fun showLoading(loading: Boolean) {
+        binding.progressBar.isVisible = loading
+        binding.recyclerView.isVisible = !loading
     }
 
     private fun getUsers() {

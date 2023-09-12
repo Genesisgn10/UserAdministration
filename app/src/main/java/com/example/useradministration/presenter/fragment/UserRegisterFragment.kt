@@ -28,17 +28,22 @@ import com.example.useradministration.toBase64
 import com.example.utils.Const.MASK_CNPJ
 import com.example.utils.Const.MASK_CPF
 import com.example.utils.Const.MASK_DATA
-import com.example.utils.Const.maxSizeInBytes
 import com.example.utils.MaskUtils.applyMaskToEditText
 import com.example.utils.StateError
 import com.example.utils.StateLoading
 import com.example.utils.StateSuccessV2
 import com.example.utils.ValidationUtils.calculateAgeFromBirthdate
+import com.example.utils.ValidationUtils.dateOfBirthToTimestamp
+import com.example.utils.ValidationUtils.timestampToDate
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.android.ext.android.inject
 import java.io.ByteArrayOutputStream
 
 class UserRegisterFragment : Fragment() {
+
+    companion object {
+        private const val SELECT_IMAGE_REQUEST = 1
+    }
 
     private var _binding: FragmentUserRegistrationBinding? = null
     private val binding get() = _binding!!
@@ -51,6 +56,8 @@ class UserRegisterFragment : Fragment() {
         R.id.radioPessoaJuridica to MASK_CNPJ
     )
 
+    private val maxSizeInBytes = 1024L * 1024L // 1 MB
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +69,7 @@ class UserRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observer()
+        observeViewModel()
         initView()
     }
 
@@ -73,12 +80,12 @@ class UserRegisterFragment : Fragment() {
         setMask()
     }
 
-    private fun observer() {
-        userViewModel.users.observe(viewLifecycleOwner) {
-            when (it) {
+    private fun observeViewModel() {
+        userViewModel.users.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is StateSuccessV2 -> handleSuccess()
                 is StateLoading -> {}
-                is StateError -> showError(it.errorData)
+                is StateError -> showError(state.errorData)
                 else -> {}
             }
         }
@@ -100,31 +107,23 @@ class UserRegisterFragment : Fragment() {
         args?.user?.let { populateUser(it) }
     }
 
-    private fun isUpdateUser(): Boolean {
-        return args?.user != null
-    }
-
     private fun setupRadioGroup() {
-        with(binding) {
-            radioGroup.setOnCheckedChangeListener { _, checkedId ->
-                textEditCpfCnpj.text?.clear()
-                updateCpfCnpjMask(checkedId)
-            }
+        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            binding.textEditCpfCnpj.text?.clear()
+            updateCpfCnpjMask(checkedId)
         }
     }
 
     private fun updateCpfCnpjMask(checkedId: Int) {
-        with(binding) {
-            val mask = maskMap[checkedId] ?: ""
+        val mask = maskMap[checkedId] ?: ""
+        applyMaskToEditText(binding.textEditCpfCnpj, mask)
 
-            applyMaskToEditText(textEditCpfCnpj, mask)
-
-            if (mask == maskMap[R.id.radioPessoaFisica]) {
-                textInputCpfCnpj.hint = getString(R.string.hint_cpf)
-            } else if (mask == maskMap[R.id.radioPessoaJuridica]) {
-                textInputCpfCnpj.hint = getString(R.string.hint_cnpj)
-            }
+        val hintResId = when (mask) {
+            MASK_CPF -> R.string.hint_cpf
+            MASK_CNPJ -> R.string.hint_cnpj
+            else -> R.string.hint_default
         }
+        binding.textInputCpfCnpj.hint = getString(hintResId)
     }
 
     private fun pickImage() {
@@ -134,7 +133,6 @@ class UserRegisterFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == SELECT_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val selectedImageUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(
@@ -152,7 +150,7 @@ class UserRegisterFragment : Fragment() {
             tvAddress.editText?.setText(user.address)
             inputPassword.editText?.setText(user.password)
             inputEmail.editText?.setText(user.email)
-            inputData.editText?.setText(user.birthdate)
+            inputData.editText?.setText(timestampToDate(user.birthdate))
             imageView.setImageBitmap(user.photoUrl.fromBase64())
             textEditCpfCnpj.setText(user.cpf_cnpj)
         }
@@ -208,9 +206,13 @@ class UserRegisterFragment : Fragment() {
                 userViewModel.updateUser(user)
             } else {
                 userViewModel.addUser(user)
-
+                userViewModel.postUser(user)
             }
         }
+    }
+
+    private fun isUpdateUser(): Boolean {
+        return args?.user != null
     }
 
     private fun validateFields(): Boolean {
@@ -275,7 +277,7 @@ class UserRegisterFragment : Fragment() {
         val username = binding.tvUsername.editText?.text.toString()
         val password = binding.inputPassword.editText?.text.toString()
         val email = binding.inputEmail.editText?.text.toString()
-        val birthdate = binding.inputData.editText?.text.toString()
+        val birthdate = dateOfBirthToTimestamp(binding.inputData.editText?.text.toString())
         val sex = binding.inputData.editText?.text.toString()
         val type = getSelectRadioButton()
         val cpf_cnpj = binding.textInputCpfCnpj.editText?.text.toString()
@@ -324,9 +326,5 @@ class UserRegisterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val SELECT_IMAGE_REQUEST = 1
     }
 }

@@ -36,7 +36,7 @@ class DatabaseHelper(private val context: Context) :
                 $COLUMN_USERNAME TEXT NOT NULL UNIQUE,
                 $COLUMN_PASSWORD TEXT NOT NULL,
                 $COLUMN_EMAIL TEXT NOT NULL,
-                $COLUMN_BIRTHDATE TEXT NOT NULL,
+                $COLUMN_BIRTHDATE INTEGER NOT NULL,
                 $COLUMN_SEX TEXT NOT NULL,
                 $COLUMN_TYPE TEXT NOT NULL,
                 $COLUMN_CPF_CNPJ TEXT NOT NULL,

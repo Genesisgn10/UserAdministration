@@ -4,6 +4,7 @@ import android.util.Patterns
 
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 
 object ValidationUtils {
 
@@ -41,6 +42,28 @@ object ValidationUtils {
         }
 
         return idade
+    }
+
+    fun dateOfBirthToTimestamp(dateOfBirth: String): Long {
+        return try {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+            val date = dateFormat.parse(dateOfBirth)
+            date.time
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+    }
+
+    fun timestampToDate(timestamp: Long, pattern: String = "dd/MM/yyyy"): String {
+        return try {
+            val dateFormat = SimpleDateFormat(pattern)
+            val date = Date(timestamp)
+            dateFormat.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ""
+        }
     }
 
 }
